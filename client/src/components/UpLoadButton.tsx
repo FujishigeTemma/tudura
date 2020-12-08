@@ -14,11 +14,23 @@ const UpLoadButton: React.FC = () => {
   const [fileSelector, setFileSelector] = useState<HTMLInputElement>()
   useEffect(() => {
     setFileSelector(buildFileSelector())
-  })
+  }, [])
+
 
   const handleFileSelect = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+
     event.preventDefault();
-    (fileSelector as HTMLInputElement).click();
+    (fileSelector as HTMLInputElement).click()
+    fileSelector?.addEventListener('change', () => {
+      if (fileSelector?.files != undefined) {
+        for (let i = 0; i < fileSelector.files.length; i++) {
+          console.log(fileSelector.files[i].name)
+          //TODO:アップロードする操作を実装
+        }
+        setFileSelector(buildFileSelector())//stateを初期化
+      }
+    }
+    )
   }
 
   return (
