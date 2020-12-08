@@ -24,8 +24,10 @@ const Button = styled.button`
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, .25);
   background-color: ${Color.PRIMARY};
   overflow: hidden;
+  transition: all 0.25s ease;
   &:hover {
     cursor: pointer;
+    opacity: 0.8;
   }
 `
 
