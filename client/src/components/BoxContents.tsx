@@ -12,7 +12,7 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid }: BoxContentsProps) =>
   const renderCard = (): string[] => {
     const res: string[] = []
     for (let i = 0; i < 100; i++) {
-      res.push('test')
+      res.push(`test ${i}`)
     }
     return res
   }
