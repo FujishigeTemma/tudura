@@ -1,12 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Color from '../style/Color'
 
+const buildFileSelector = (): HTMLInputElement => {
+  const fileSelector: HTMLInputElement = document.createElement('input');
+  fileSelector.setAttribute('type', 'file');
+  fileSelector.setAttribute('multiple', 'multiple');
+  return fileSelector;
+}
+
 const UpLoadButton: React.FC = () => {
+
+  const [fileSelector, setFileSelector] = useState<HTMLInputElement>()
+  useEffect(() => {
+    setFileSelector(buildFileSelector())
+  }, [])
+
+
+  const handleFileSelect = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+
+    event.preventDefault();
+    (fileSelector as HTMLInputElement).click()
+    fileSelector?.addEventListener('change', () => {
+      if (fileSelector?.files != undefined) {
+        for (let i = 0; i < fileSelector.files.length; i++) {
+          console.log(fileSelector.files[i].name)
+          //TODO:アップロードする操作を実装
+        }
+        setFileSelector(buildFileSelector())//stateを初期化
+      }
+    }
+    )
+  }
+
   return (
-    <Button>
+    <Button onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => handleFileSelect(event)}>
       <UploadIcon xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
-        <path d='M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z'/>
+        <path d='M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z' />
       </UploadIcon>
     </Button>
   )
