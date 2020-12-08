@@ -1,48 +1,51 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import Card from './Card'
-import UpLoadButton from './UpLoadButton'
+import { useParams } from 'react-router-dom'
+import BoxContents from './BoxContents'
+
+interface BoxParams {
+  boxid: string
+}
 
 const Box: React.FC = () => {
 
-  const renderCard = (): string[] => {
-    const res: string[] = []
-    for (let i = 0; i < 100; i++) {
-      res.push('test')
+  const { boxid } = useParams<BoxParams>()
+  const [ isBox, setIsBox ] = useState(false) // 存在するboxidかどうか
+  const [ isAuth, setIsAuth ] = useState(false) // パスワード認証が必要かどうか
+
+  useEffect((): void => {
+    setIsAuth(true)
+    if (boxid === 'a') {
+      setIsBox(true)
     }
-    return res
-  }
+  }, [])
 
   return (
     <BoxBody>
-      <BoxName>BoxName</BoxName>
-      <BoxGrid>
-        {renderCard().map((n: string) => (
-          <Card key={n} />
-        ))}
-      </BoxGrid>
-      <UpLoadButton></UpLoadButton>
+      {!isBox && (
+        <NotFound>404 Not Found</NotFound>
+      )}
+      {isBox && (
+        <>
+          {!isAuth && (
+            <></>
+          )}
+          {isAuth && (
+            <BoxContents boxid={boxid}></BoxContents>
+          )}
+        </>
+      )}
     </BoxBody>
   )
 }
 
+const NotFound = styled.div`
+  text-align: center;
+  font-size: 4rem;
+`
+
 const BoxBody = styled.div`
   padding: 2rem 4rem;
-`
-
-const BoxName = styled.div`
-  font-size: 2rem;
-`
-
-const BoxGrid = styled.div`
-  display: grid;
-  margin: 1.5rem auto;
-  grid-template-rows: repeat(auto-fit, 10rem);
-  grid-template-columns: repeat(auto-fit, 10rem);
-  grid-row-gap: 2rem;
-  grid-column-gap: 2rem;
-  justify-content: center;
-  align-content: top;
 `
 
 export default Box
