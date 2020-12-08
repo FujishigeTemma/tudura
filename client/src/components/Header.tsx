@@ -12,15 +12,15 @@ const Header: React.FC = () => (
 
 const HeaderBack = styled.div`
   background: ${Color.PRIMARY};
-  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .25);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, .25);
+  position:relative;
 `
 
 const HeaderMain = styled.a`
   text-decoration: none;
   display: flex;
   width: fit-content;
-  margin: auto;
-  padding: 1em;
+  margin: 0.5em auto;
 `
 
 const HeaderLogo = styled.div`

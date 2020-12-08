@@ -2,25 +2,23 @@ import React from 'react'
 import styled from 'styled-components'
 import Card from './Card'
 
+const Box: React.FC = () => {
 
-class Box extends React.Component {
-
-  RenderCard(entries: number): JSX.Element[] {
-    const res = []
-    for (let i = 0; i < entries; i++) {
-      res.push(<Card />)
+  const renderCard = (): string[] => {
+    const res: string[] = []
+    for (let i = 0; i < 20; i++) {
+      res.push('test')
     }
-    return res;
+    return res
   }
 
-  render(): JSX.Element {
-    return (
-      <BoxGrid>
-        {this.RenderCard(20).map((card) => card)}
-      </BoxGrid>
-    )
-  }
-
+  return (
+    <BoxGrid>
+      {renderCard().map((n: string) => (
+        <Card key={n} />
+      ))}
+    </BoxGrid>
+  )
 }
 
 const BoxGrid = styled.div`
@@ -34,4 +32,3 @@ const BoxGrid = styled.div`
 `
 
 export default Box
-
