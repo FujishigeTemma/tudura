@@ -6,27 +6,40 @@ const Box: React.FC = () => {
 
   const renderCard = (): string[] => {
     const res: string[] = []
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
       res.push('test')
     }
     return res
   }
 
   return (
-    <BoxGrid>
-      {renderCard().map((n: string) => (
-        <Card key={n} />
-      ))}
-    </BoxGrid>
+    <BoxBody>
+      <BoxName>BoxName</BoxName>
+      <BoxGrid>
+        {renderCard().map((n: string) => (
+          <Card key={n} />
+        ))}
+      </BoxGrid>
+    </BoxBody>
   )
 }
 
+
+const BoxBody = styled.div`
+  padding: 2rem 4rem;
+`
+
+const BoxName = styled.div`
+  font-size: 2rem;
+`
+
 const BoxGrid = styled.div`
   display: grid;
-  grid-template-rows: repeat(auto-fit, 200px);
-  grid-template-columns: repeat(auto-fit, 200px);
-  grid-row-gap: 40px;
-  grid-column-gap: 40px;
+  margin: 1.5rem auto;
+  grid-template-rows: repeat(auto-fit, 10rem);
+  grid-template-columns: repeat(auto-fit, 10rem);
+  grid-row-gap: 2rem;
+  grid-column-gap: 2rem;
   justify-content: center;
   align-content: top;
 `

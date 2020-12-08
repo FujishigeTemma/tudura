@@ -4,7 +4,7 @@ import Color from '../style/Color'
 
 const Header: React.FC = () => (
   <HeaderBack>
-    <HeaderMain href = '/'>
+    <HeaderMain href='/'>
       <HeaderLogo>tudura</HeaderLogo>
     </HeaderMain>
   </HeaderBack>
@@ -20,12 +20,12 @@ const HeaderMain = styled.a`
   text-decoration: none;
   display: flex;
   width: fit-content;
-  margin: 0.5em auto;
+  margin: 0.5rem auto;
 `
 
 const HeaderLogo = styled.div`
   color: ${Color.TEXT_SECONDARY};
-  font-size: 3em;
+  font-size: 3rem;
 `
 
 export default Header
