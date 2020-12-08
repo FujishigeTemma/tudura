@@ -9,8 +9,8 @@ const Card: React.FC = () => {
 
 const CardDefault = styled.div`
   background: #C4C4C4;
-  width:10rem;
-  height:10rem;
+  width: 10rem;
+  height: 10rem;
 `
 
 export default Card
