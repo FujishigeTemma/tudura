@@ -17,7 +17,7 @@ const UpLoadButton: React.FC = () => {
   }, [])
 
 
-  const handleFileSelect = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  const handleFileSelect = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
 
     event.preventDefault();
     (fileSelector as HTMLInputElement).click()
