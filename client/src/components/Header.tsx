@@ -13,7 +13,7 @@ const Header: React.FC = () => (
 const HeaderBack = styled.div`
   background: ${Color.PRIMARY};
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, .25);
-  position:relative;
+  position: relative;
 `
 
 const HeaderMain = styled.a`

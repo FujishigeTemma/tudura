@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Card from './Card'
+import UpLoadButton from './UpLoadButton'
 
 const Box: React.FC = () => {
 
@@ -20,10 +21,10 @@ const Box: React.FC = () => {
           <Card key={n} />
         ))}
       </BoxGrid>
+      <UpLoadButton></UpLoadButton>
     </BoxBody>
   )
 }
-
 
 const BoxBody = styled.div`
   padding: 2rem 4rem;
