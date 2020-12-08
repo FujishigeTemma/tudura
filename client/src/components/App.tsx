@@ -5,16 +5,16 @@ import Router from './Router'
 import Header from './Header'
 
 const App: React.FC = () => {
-    return (
-      <div className="App">
-        <Page>
-          <Header></Header>
-          <PageBody>
-            <Router></Router>
-          </PageBody>
-        </Page>
-      </div>
-    )
+  return (
+    <div className="App">
+      <Page>
+        <Header></Header>
+        <PageBody>
+          <Router></Router>
+        </PageBody>
+      </Page>
+    </div>
+  )
 }
 
 const Page = styled.div`
