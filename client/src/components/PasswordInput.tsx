@@ -53,7 +53,9 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, authenticate }: Pa
           onSubmit={verifyPassword}
           autoFocus
         />
-        <Link to='/'><Cancel type='button'>cancel</Cancel></Link>
+        <Link to='/'>
+          <Cancel type='button'>cancel</Cancel>
+        </Link>
         <Submit type='submit'>submit</Submit>
       </ModalForm>
     </Modal>
