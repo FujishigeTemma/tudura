@@ -27,14 +27,14 @@ const modalStyle: Modal.Styles = {
 
 const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, authenticate }: PasswordInputProps) => {
 
-  const [ isOpen, setIsOpen ] = useState(true)
-  const [ value, setValue ] = useState('')
+  const [isOpen, setIsOpen] = useState(true)
+  const [value, setValue] = useState('')
 
   const verifyPassword = (event: React.FormEvent): void => {
-    event.preventDefault()
+    console.log(value)
     authenticate()
     setIsOpen(false)
-    console.log(value)
+    event.preventDefault()
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -47,13 +47,13 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, authenticate }: Pa
         <ModalTitle>Enter {boxid} Password </ModalTitle>
         <PasswordFrom
           type='password'
+          name='password'
           placeholder='Enter password'
           onChange={handleChange}
+          onSubmit={verifyPassword}
           autoFocus
         />
-        <Link to='/'>
-          <Cancel>cancel</Cancel>
-        </Link>
+        <Link to='/'><Cancel type='button'>cancel</Cancel></Link>
         <Submit type='submit'>submit</Submit>
       </ModalForm>
     </Modal>
