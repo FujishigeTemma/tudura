@@ -95,6 +95,7 @@ const Submit = styled.button`
   background-color: ${Color.PRIMARY};
   color: ${Color.BACKGROUND_PRIMARY};
   float: right;
+  outline: none;
   border-style: none;
   border-radius: 0.6rem;
   &:hover {
@@ -110,6 +111,7 @@ const Cancel = styled.button`
   padding: 0.4rem 0.7rem;
   background-color: ${Color.PRIMARY};
   color: ${Color.BACKGROUND_PRIMARY};
+  outline: none;
   border-style: none;
   border-radius: 0.6rem;
   &:hover {
