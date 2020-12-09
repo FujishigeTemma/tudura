@@ -27,8 +27,8 @@ const modalStyle: Modal.Styles = {
 
 const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, authenticate }: PasswordInputProps) => {
 
-  const [isOpen, setIsOpen] = useState(true)
-  const [value, setValue] = useState('')
+  const [ isOpen, setIsOpen ] = useState(true)
+  const [ value, setValue ] = useState('')
 
   const verifyPassword = (event: React.FormEvent): void => {
     event.preventDefault()
@@ -47,7 +47,6 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, authenticate }: Pa
         <ModalTitle>Enter {boxid} Password </ModalTitle>
         <PasswordFrom
           type='password'
-          name='password'
           placeholder='Enter password'
           onChange={handleChange}
           autoFocus
