@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Color from '../style/Color'
+import SaveFile from './Savefile'//デバッグ用
 
 const buildFileSelector = (): HTMLInputElement => {
   const fileSelector: HTMLInputElement = document.createElement('input');
@@ -25,6 +26,7 @@ const UpLoadButton: React.FC = () => {
       if (fileSelector?.files != undefined) {
         for (let i = 0; i < fileSelector.files.length; i++) {
           console.log(fileSelector.files[i].name)
+          SaveFile(fileSelector.files[i])//デバッグ用
           //TODO:アップロードする操作を実装
         }
         setFileSelector(buildFileSelector())//stateを初期化
