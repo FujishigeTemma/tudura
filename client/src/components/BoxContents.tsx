@@ -60,11 +60,10 @@ const BoxInfoContents = styled.div`
 
 const BoxGrid = styled.div`
   display: grid;
-  margin: 5rem 15rem;
-  grid-template-columns: repeat(auto-fit, 12rem);
-  grid-template-rows: repeat(auto-fit, 16rem);
-  grid-row-gap: 2rem;
-  grid-column-gap: 2rem;
+  padding: 5rem 20%;
+  min-width: 12rem;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  grid-gap: 2rem;
   justify-content: center;
   align-content: top;
 `
