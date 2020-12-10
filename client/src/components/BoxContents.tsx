@@ -61,7 +61,7 @@ const BoxInfoContents = styled.div`
 const BoxGrid = styled.div`
   display: grid;
   padding: 5rem 20%;
-  min-width: 12rem;
+  min-width: 400px;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   grid-gap: 2rem;
   justify-content: center;
