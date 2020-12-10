@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import BoxContents from './BoxContents'
 import PasswordInput from './PasswordInput'
+import Screen from '../style/Screen'
 
 interface BoxParams {
   boxid: string
@@ -50,6 +51,9 @@ const NotFound = styled.div`
 `
 
 const BoxBody = styled.div`
+  ${Screen.MOBILE} {
+    padding: 1rem 5%;
+  }
   padding: 2rem 4rem;
 `
 

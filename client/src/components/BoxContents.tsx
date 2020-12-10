@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Card from './Card'
 import UpLoadButton from './UpLoadButton'
 import Color from '../style/Color'
+import Screen from '../style/Screen'
 
 interface BoxContentsProps {
   boxid: string
@@ -40,6 +41,9 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid }: BoxContentsProps) =>
 const BoxName = styled.div`
   text-align: center;
   margin :1rem 0 0;
+  ${Screen.MOBILE} {
+    font-size: 3rem;
+  }
   font-size: 4rem;
   font-family: 'Roboto';
   font-weight:bold;
@@ -51,7 +55,10 @@ const BoxInfo = styled.div`
   justify-content:center;
 `
 const BoxInfoContents = styled.div`
-  font-size:1.5rem;
+  ${Screen.MOBILE} {
+    font-size: 1rem;
+  }
+  font-size: 1.5rem;
   font-weight:bold;
   margin :0 1rem;
   color:${Color.TEXT_PRIMARY};
@@ -60,12 +67,24 @@ const BoxInfoContents = styled.div`
 
 const BoxGrid = styled.div`
   display: grid;
-  padding: 5rem 20%;
-  min-width: 400px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-gap: 2rem;
+  padding: 5rem 0;
+  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-gap: 20px;
   justify-content: center;
   align-content: top;
+  ${Screen.WINDOW} {
+    max-width: max(1000px, 60%);
+  }
+  ${Screen.MOBILE} {
+    padding: 3rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    grid-gap: 15px;
+  }
+  @media screen and (max-width: 400px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+  }
 `
 
 export default BoxContents
