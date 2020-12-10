@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Card from './Card'
 import UpLoadButton from './UpLoadButton'
+import Color from '../style/Color'
 
 interface BoxContentsProps {
   boxid: string
@@ -20,6 +21,11 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid }: BoxContentsProps) =>
   return (
     <>
       <BoxName>BoxName {boxid}</BoxName>
+      <BoxInfo>
+        <BoxInfoContents>last updated: 2020/12/9</BoxInfoContents>
+        <BoxInfoContents>12 items</BoxInfoContents>
+        <BoxInfoContents>14/200 GB</BoxInfoContents>
+      </BoxInfo>
       <BoxGrid>
         {renderCard().map((n: string) => (
           <Card key={n} />
@@ -32,16 +38,32 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid }: BoxContentsProps) =>
 
 
 const BoxName = styled.div`
-  font-size: 2rem;
+  text-align: center;
+  margin :1rem 0 0;
+  font-size: 4rem;
+  font-family: 'Roboto';
+  font-weight:bold;
+  color:${Color.TEXT_PRIMARY};
+`
+
+const BoxInfo = styled.div`
+  display: flex;
+  justify-content:center;
+`
+const BoxInfoContents = styled.div`
+  font-size:1.5rem;
+  font-weight:bold;
+  margin :0 1rem;
+  color:${Color.TEXT_PRIMARY};
+  opacity: 0.67;
 `
 
 const BoxGrid = styled.div`
   display: grid;
-  margin: 1.5rem auto;
-  grid-template-rows: repeat(auto-fit, 10rem);
-  grid-template-columns: repeat(auto-fit, 10rem);
-  grid-row-gap: 2rem;
-  grid-column-gap: 2rem;
+  padding: 5rem 20%;
+  min-width: 400px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 2rem;
   justify-content: center;
   align-content: top;
 `
