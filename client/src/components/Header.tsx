@@ -24,12 +24,9 @@ const HeaderBack = styled.div`
 `
 
 const HeaderMain = styled.a`
-  ${Screen.MOBILE} {
-    margin: 1rem 5% 0.5rem;
-  }
   text-decoration: none;
   width: fit-content;
-  margin: 0.5rem 15%;
+  margin: 0.5rem max(calc(50% - 620px), 5%);
 `
 
 const HeaderLogo = styled.div`
@@ -42,11 +39,8 @@ const HeaderLogo = styled.div`
 `
 
 const AddNewButton = styled.button`
-  ${Screen.MOBILE} {
-    margin: 1rem 5% 0.5rem;
-  }
   font-size: 1.4rem;
-  margin: 1rem 15% 0.5rem;
+  margin: 1rem max(calc(50% - 620px), 5%) 0.5rem;
   padding: 0.4rem 1rem;
   background-color: ${Color.PRIMARY};
   color: ${Color.BACKGROUND_PRIMARY};
