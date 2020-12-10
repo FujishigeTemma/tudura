@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
+import {ReactComponent as UploadIconSvg} from '../img/upload_icon.svg'
 
 const buildFileSelector = (): HTMLInputElement => {
   const fileSelector: HTMLInputElement = document.createElement('input');
@@ -36,9 +37,7 @@ const UpLoadButton: React.FC = () => {
 
   return (
     <Button onClick={(event: React.MouseEvent<HTMLElement, MouseEvent>) => handleFileSelect(event)}>
-      <UploadIcon xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
-        <path d='M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z' />
-      </UploadIcon>
+      <UploadIcon></UploadIcon>
     </Button>
   )
 }
@@ -66,8 +65,9 @@ const Button = styled.button`
   }
 `
 
-const UploadIcon = styled.svg`
-  fill: ${Color.BACKGROUND_PRIMARY};
+const UploadIcon = styled(UploadIconSvg)`
+  fill: ${Color.PRIMARY};
+  stroke: ${Color.BACKGROUND_PRIMARY};
   width: 70%;
   height: 70%;
 `
