@@ -69,7 +69,7 @@ const BoxGrid = styled.div`
   display: grid;
   padding: 5rem 0;
   margin: 0 auto;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-gap: 20px;
   justify-content: center;
   align-content: top;
@@ -78,10 +78,10 @@ const BoxGrid = styled.div`
   }
   ${Screen.MOBILE} {
     padding: 3rem 0;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     grid-gap: 15px;
   }
-  @media screen and (max-width: 400px) {
+  @media screen and (max-width: 420px) {
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 10px;
   }
