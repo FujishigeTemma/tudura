@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Color from '../style/Color'
+import Screen from '../style/Screen'
 import SaveFile from './Savefile'//デバッグ用
 
 const buildFileSelector = (): HTMLInputElement => {
@@ -45,8 +46,12 @@ const UpLoadButton: React.FC = () => {
 }
 
 const Button = styled.button`
-  right: 3rem;
-  bottom: 3rem;
+  right: 10%;
+  bottom: 2rem;
+  ${Screen.MOBILE} {
+    width: 5rem;
+    height: 5rem;
+  }
   width: 7rem;
   height: 7rem;
   border-radius: 50%;
@@ -65,8 +70,8 @@ const Button = styled.button`
 
 const UploadIcon = styled.svg`
   fill: ${Color.BACKGROUND_PRIMARY};
-  width: 4rem;
-  height: 4rem;
+  width: 70%;
+  height: 70%;
 `
 
 export default UpLoadButton

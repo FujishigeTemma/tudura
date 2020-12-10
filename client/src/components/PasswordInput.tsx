@@ -63,20 +63,21 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, authenticate }: Pa
 }
 
 const ModalForm = styled.form`
-  padding: 1rem;
+  font-size: min(3.2vw, 1rem);
+  padding: 1em;
 `
 
 const ModalTitle = styled.div`
-  font-size: 1.5rem;
-  margin: 0 0 2rem;
+  font-size: 1.5em;
+  margin: 0 0 2em;
 `
 
 const PasswordFrom = styled.input`
   display: flex;
-  font-size: 1.5rem;
-  padding: 0.5rem;
-  margin: 0 1rem;
-  border-radius: 0.5rem;
+  font-size: 1.5em;
+  padding: 0.5em;
+  margin: 0 1em;
+  border-radius: 0.5em;
   outline: none;
   border: 2px solid ${Color.SECONDARY_SUB};
   &:focus {
@@ -90,16 +91,16 @@ const PasswordFrom = styled.input`
 `
 
 const Submit = styled.button`
-  font-size: 1.4rem;
+  font-size: 1.4em;
   width: 40%;
-  margin: 2rem 0 0;
-  padding: 0.4rem 0.7rem;
+  margin: 2em 0 0;
+  padding: 0.4em 0.7em;
   background-color: ${Color.PRIMARY};
   color: ${Color.BACKGROUND_PRIMARY};
   float: right;
   outline: none;
   border-style: none;
-  border-radius: 0.6rem;
+  border-radius: 0.6em;
   &:hover {
     cursor: pointer;
     opacity: 0.8;
@@ -107,15 +108,15 @@ const Submit = styled.button`
 `
 
 const Cancel = styled.button`
-  font-size: 1.4rem;
+  font-size: 1.4em;
   width: 40%;
-  margin: 2rem 0 0;
-  padding: 0.4rem 0.7rem;
+  margin: 2em 0 0;
+  padding: 0.4em 0.7em;
   background-color: ${Color.PRIMARY};
   color: ${Color.BACKGROUND_PRIMARY};
   outline: none;
   border-style: none;
-  border-radius: 0.6rem;
+  border-radius: 0.6em;
   &:hover {
     cursor: pointer;
     opacity: 0.8;
