@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
-import SaveFile from './Savefile'//デバッグ用
 import {ReactComponent as UploadIconSvg} from '../img/upload_icon.svg'
 
 const buildFileSelector = (): HTMLInputElement => {
@@ -28,7 +27,6 @@ const UpLoadButton: React.FC = () => {
       if (fileSelector?.files != undefined) {
         for (let i = 0; i < fileSelector.files.length; i++) {
           console.log(fileSelector.files[i].name)
-          SaveFile(fileSelector.files[i])//デバッグ用
           //TODO:アップロードする操作を実装
         }
         setFileSelector(buildFileSelector())//stateを初期化

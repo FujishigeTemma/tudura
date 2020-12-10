@@ -53,7 +53,11 @@ const BoxName = styled.div`
 const BoxInfo = styled.div`
   display: flex;
   justify-content:center;
+  ${Screen.MOBILE} {
+    display: none;
+  }
 `
+
 const BoxInfoContents = styled.div`
   ${Screen.MOBILE} {
     font-size: 1rem;
@@ -77,7 +81,7 @@ const BoxGrid = styled.div`
     max-width: max(1000px, 60%);
   }
   ${Screen.MOBILE} {
-    padding: 3rem 0;
+    padding: 2rem 0;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     grid-gap: 15px;
   }
