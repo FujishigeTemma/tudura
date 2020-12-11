@@ -15,7 +15,6 @@ interface BoxProps {
   close: VoidFunction
 }
 
-//TODO:名前変える
 const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
 
   const [boxName, setBoxName] = useState('')
