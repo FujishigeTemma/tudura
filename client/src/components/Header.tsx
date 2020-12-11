@@ -43,7 +43,7 @@ const LogoIcon = styled(IconSvg)`
   height: 3em;
   margin: 0 0.5em 0 0;
   .circle {
-    fill: ${Color.BACKGROUND_SECONDARY};
+    fill: ${Color.PRIMARY_SUB};
   }
   .box {
     fill: ${Color.TEXT_SECONDARY};
@@ -55,8 +55,7 @@ const LogoIcon = styled(IconSvg)`
 
 const LogoText = styled.div`
   font-size: 3rem;
-  font-family: 'Roboto Mono';
-  letter-spacing: -0.07em;
+  font-family: 'Cabin Condensed', sans-serif;
   ${Screen.MOBILE} {
     //color: ${Color.TEXT_SECONDARY};
     font-size: 2.5rem;
