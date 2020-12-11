@@ -19,7 +19,9 @@ const HomeBody = styled.div`
 `
 
 const HomeText = styled.div`
+  font-family: 'Roboto Mono';
   font-size: 5rem;
+  letter-spacing: -0.07em;
   margin: 0 0 5rem;
 `
 
