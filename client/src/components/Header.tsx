@@ -30,6 +30,7 @@ const HeaderMain = styled.a`
 `
 
 const HeaderLogo = styled.div`
+  font-family: 'Roboto Mono';
   ${Screen.MOBILE} {
     //color: ${Color.TEXT_SECONDARY};
     font-size: 2.5rem;
