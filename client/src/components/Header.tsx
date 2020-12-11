@@ -1,21 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
 import { ReactComponent as IconSvg } from '../img/icon.svg'
-import AddNewButton from './AddNewButton'
+import AddNewBox from './AddNewBox'
 
-const Header: React.FC = () => (
-  <HeaderBack>
-    <HeaderMain href='/'>
-      <LogoIcon></LogoIcon>
-      <LogoText>tudura</LogoText>
-    </HeaderMain>
-    <Button>
-      <AddNewButton >Add New</AddNewButton>
-    </Button>
-  </HeaderBack>
-)
+const Header: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const closeModal = (): void => {
+    setIsOpen(false)
+  }
+  const openModal = (): void => {
+    setIsOpen(true)
+  }
+  
+  return (
+    <HeaderBack>
+      <HeaderMain href='/'>
+        <LogoIcon></LogoIcon>
+        <LogoText>tudura</LogoText>
+      </HeaderMain>
+      <AddNewButton onClick={openModal}>
+        Add New
+      </AddNewButton>
+      <AddNewBox isOpen={isOpen} close={closeModal}></AddNewBox>
+    </HeaderBack>
+  )
+}
 
 const HeaderBack = styled.div`
   ${Screen.MOBILE} {
@@ -56,10 +68,6 @@ const LogoIcon = styled(IconSvg)`
   }
 `
 
-const Button = styled.div`
-  margin: 1rem max(calc(50% - 620px), 5%) 0.5rem;
-  padding: 0.4rem 1rem;
-  `
 const LogoText = styled.div`
   font-size: 3rem;
   font-family: 'Cabin Condensed', sans-serif;
@@ -70,5 +78,19 @@ const LogoText = styled.div`
   color: ${Color.TEXT_PRIMARY};
 `
 
+const AddNewButton = styled.button`
+  font-size: 1.4rem;
+  margin: 0 max(calc(50% - 620px), 5%);
+  padding: 0.5rem 1rem;
+  background-color: ${Color.PRIMARY};
+  color: ${Color.BACKGROUND_PRIMARY};
+  outline: none;
+  border-style: none;
+  border-radius: 0.6rem;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+`
 
 export default Header

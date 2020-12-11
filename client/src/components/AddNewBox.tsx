@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Modal from 'react-modal'
 import styled from 'styled-components'
 import Color from '../style/Color'
+import Screen from '../style/Screen'
 
 interface BoxInfo {
   name: string
@@ -70,13 +71,8 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
           disabled={!isLocked}
           onChange={handleChangePassword}
         />
-        <Create
-          type='submit'
-        >create</Create>
-        <Cancel
-          type='button'
-          onClick={closeModal}
-        >cancel</Cancel>
+        <Create type='submit'>create</Create>
+        <Cancel type='button' onClick={closeModal}>cancel</Cancel>
       </ModalForm>
     </Modal>
   )
@@ -99,33 +95,32 @@ const ModalStyle: Modal.Styles = {
 }
 
 const ModalForm = styled.form`
-  font-size: min(3.2vw, 1rem);
-  padding: 2em 3em;
-`
-
-
-const ModalTitle = styled.div`
-  font-size: 2em;
-  margin: 0 -1em 2em;
-`
-
-const ParamTitle = styled.div`
-  line-height:1.5em;
-  margin: 0 1em 0 0;
-  font-size: 1.5em;
+  font-size: min(2.7vw, 1rem);
+  padding: 1em 2em;
 `
 
 const BoxName = styled.div`
   display: flex;
   justify-content: center;
-  margin:0 0 1rem 0;
+  margin: 0 0 1em 0;
 `
+
+const ModalTitle = styled.div`
+  font-size: 2em;
+  margin: 0 -0.7em 2em;
+`
+
+const ParamTitle = styled.div`
+  line-height: 1.5em;
+  margin: 0 1em 0 0;
+  font-size: 1.5em;
+`
+
 const BoxNameInputForm = styled.input`
   display: flex;
-  width : 19.7rem;
   font-size: 1.5em;
   padding: 0.3em;
-  margin: 0 1em;
+  margin: 0 0 0 1.2em;
   border-radius: 0.5em;
   outline: none;
   border: 2px solid ${Color.SECONDARY_SUB};
@@ -141,17 +136,16 @@ const BoxNameInputForm = styled.input`
 
 const PasswordForm = styled.div`
   display: flex;
-  float: center;
+  align-items: center;
   margin:  0 0 1em 0;
 `
 
 const PasswordInputForm = styled.input`
   display: flex;
-  width: 26rem;
-  height:1.5rem;
+  box-sizing: border-box;
+  width: 100%;
   font-size: 1.5em;
-  padding: 0.5em;
-  margin: 0 0;
+  padding: 0.3em 0 0.3em 0.3em;
   border-radius: 0.5em;
   outline: none;
   border: 2px solid ${Color.SECONDARY_SUB};
@@ -165,9 +159,10 @@ const PasswordInputForm = styled.input`
   }
 `
 const PasswordCheckBox = styled.input`
-  margin: 1em 0 0 0 ;
-  transform:scale(2.0);
-  flex-wrap:wrap
+  ${Screen.PHONE} {
+    transform: scale(1.3);
+  }
+  transform: scale(1.8);
 `
 
 const Create = styled.button`
