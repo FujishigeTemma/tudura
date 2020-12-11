@@ -48,6 +48,9 @@ const LogoIcon = styled(IconSvg)`
   .box {
     fill: ${Color.TEXT_SECONDARY};
   }
+  ${Screen.PHONE} {
+    display: none;
+  }
 `
 
 const LogoText = styled.div`
