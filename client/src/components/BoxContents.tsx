@@ -17,7 +17,7 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid, boxName, items }: BoxC
 
   const renderCard = (): string[] => {
     const res: string[] = []
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
       res.push(`test ${i}`)
     }
     return res
@@ -77,7 +77,7 @@ const BoxGrid = styled.div`
   display: grid;
   padding: 5rem 0;
   margin: 0 auto;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, auto));
   grid-gap: 20px;
   justify-content: center;
   align-content: top;
@@ -86,7 +86,7 @@ const BoxGrid = styled.div`
   }
   ${Screen.MOBILE} {
     padding: 2rem 0;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, auto));
     grid-gap: 15px;
   }
   ${Screen.PHONE} {
