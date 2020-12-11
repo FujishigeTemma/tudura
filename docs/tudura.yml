@@ -91,6 +91,9 @@ components:
         name:
           type: string
           example: tudura
+        passwordRequired:
+          type: boolean
+          default: false
         items:
           type: array
           items:
@@ -105,12 +108,18 @@ components:
                 type: string
                 format: date-time
                 description: デフォルトは30分
-              passwordRequired:
-                type: boolean
-                default: false
         updatedAt:
           type: string
           format: date-time
+    PostBoxRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+          nullable: true
+          description: 大文字・小文字・記号が使用可能。8文字以上(18文字以上を推奨)
     Item:
       type: object
       properties:
@@ -128,10 +137,6 @@ components:
           type: integer
           nullable: true
           description: ない場合は30分。時間単位
-        password:
-          type: string
-          nullable: true
-          description: 大文字・小文字・記号が使用可能。8文字以上(18文字以上を推奨)
   parameters:
     boxIdInPath:
       in: path
