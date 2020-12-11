@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import axios, { AxiosError }  from 'axios'
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import BoxContents from './BoxContents'
 import PasswordInput from './PasswordInput'
 import Screen from '../style/Screen'
 
 interface BoxParams {
   boxid: string
+}
+
+interface ErrorResponse {
+  title: string
+  status: number
 }
 
 interface Item {
@@ -27,50 +32,65 @@ interface GetBoxesResponse {
 const Box: React.FC = () => {
 
   const { boxid } = useParams<BoxParams>()
-  const [ isBox, setIsBox ] = useState(true) // 存在するboxidかどうか
-  const [ isAuth, setIsAuth ] = useState(false) // 認証されているかどうか
+  const history = useHistory()
+  const [ isBox, setIsBox ] = useState(0) // 0 読み込み中 1 boxidが存在しない 2 boxidが存在する
+  const [ isAuth, setIsAuth ] = useState(true) // 認証が必要かどうか
+
 
   useEffect((): void => {
     setBoxInfo()
   }, [])
 
   const authenticate = (): void => {
-    setIsAuth(true)
+    setIsAuth(false)
   }
 
   const setBoxInfo = async () => {
     const boxInfo = await getBoxes()
-    if (boxInfo === null) {
-      setIsBox(false)
+    if (boxInfo === undefined) {
+      history.push('/')
       return
     }
-    if (boxInfo.passwordRequired === false) {
-      setIsAuth(true)
+    if ('status' in boxInfo) {
+      if (boxInfo.status === 401) {
+        setIsBox(2)
+        setIsAuth(true)
+        return
+      }
+      if (boxInfo.status === 404) {
+        setIsBox(1)
+        setIsAuth(false)
+        return
+      }
+      setIsBox(1)
+      return
     }
+    setIsBox(2)
+    setIsAuth(false)
   }
 
-  const getBoxes = async (): Promise<GetBoxesResponse | null> => {
-    try {
-      const res = await axios.get<GetBoxesResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}`)
-      return res.data
-    } catch(err) {
-      console.log('error')
-      return null
-    }
-  }
+  const getBoxes = async (): Promise<GetBoxesResponse | ErrorResponse | undefined> => (
+    await axios.get<GetBoxesResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}`)
+      .then(res => ( res.data ))
+      .catch((err: AxiosError<ErrorResponse>) => ( err.response?.data ))
+  )
 
   return (
     <BoxBody>
-      {!isBox && (
+      {isBox === 1 && (
         <NotFound>404 Not Found</NotFound>
       )}
-      {isBox && (
+      {isBox === 2 && (
         <>
-          {!isAuth && (
-            <PasswordInput boxid={boxid} authenticate={authenticate}></PasswordInput>
-          )}
           {isAuth && (
-            <BoxContents boxid={boxid}></BoxContents>
+            <PasswordInput 
+              boxid={boxid}
+              isAuth={isAuth}
+              authenticate={authenticate}
+            />
+          )}
+          {!isAuth && (
+            <BoxContents boxid={boxid}/>
           )}
         </>
       )}

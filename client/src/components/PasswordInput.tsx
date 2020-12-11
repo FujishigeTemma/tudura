@@ -6,6 +6,7 @@ import Color from '../style/Color'
 
 interface PasswordInputProps {
   boxid: string
+  isAuth: boolean
   authenticate: VoidFunction
 }
 
@@ -25,15 +26,13 @@ const modalStyle: Modal.Styles = {
   }
 }
 
-const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, authenticate }: PasswordInputProps) => {
+const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, isAuth, authenticate }: PasswordInputProps) => {
 
-  const [isOpen, setIsOpen] = useState(true)
   const [value, setValue] = useState('')
 
   const verifyPassword = (event: React.FormEvent): void => {
     console.log(value)
     authenticate()
-    setIsOpen(false)
     event.preventDefault()
   }
 
@@ -42,7 +41,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, authenticate }: Pa
   }
 
   return (
-    <Modal ariaHideApp={false} isOpen={isOpen} style={modalStyle}>
+    <Modal ariaHideApp={false} isOpen={isAuth} style={modalStyle}>
       <ModalForm onSubmit={verifyPassword}>
         <ModalTitle>Enter {boxid} Password </ModalTitle>
         <PasswordFrom
