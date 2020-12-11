@@ -67,6 +67,7 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
         <PasswordInputForm
           type='password'
           placeholder='Enter password'
+          disabled={!isLocked}
           onChange={handleChangePassword}
         />
         <Create
