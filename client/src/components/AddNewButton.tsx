@@ -4,7 +4,7 @@ import Color from '../style/Color'
 import AddNewBox from './AddNewBox'
 
 const AddNewButton: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const closeModal = (): void => {
     setIsOpen(false)
