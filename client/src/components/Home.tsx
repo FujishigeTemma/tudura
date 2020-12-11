@@ -1,8 +1,11 @@
 import React from 'react'
-
+import NewBoxModal from './NewBoxModal'
 const Home: React.FC = () => {
   return (
-    <h1>tudura</h1>
+    <div>
+      <h1>tudura</h1>
+      <NewBoxModal></NewBoxModal>
+    </div>
   )
 }
 
