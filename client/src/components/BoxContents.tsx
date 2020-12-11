@@ -2,14 +2,18 @@ import React from 'react'
 import styled from 'styled-components'
 import Card from './Card'
 import UpLoadButton from './UpLoadButton'
+import { Item } from './Box'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
 
 interface BoxContentsProps {
   boxid: string
+  boxName: string
+  items: Item[]
 }
 
-const BoxContents: React.FC<BoxContentsProps> = ({ boxid }: BoxContentsProps) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const BoxContents: React.FC<BoxContentsProps> = ({ boxid, boxName, items }: BoxContentsProps) => {
 
   const renderCard = (): string[] => {
     const res: string[] = []
@@ -21,7 +25,7 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid }: BoxContentsProps) =>
 
   return (
     <>
-      <BoxName>BoxName {boxid}</BoxName>
+      <BoxName>{boxName}</BoxName>
       <BoxInfo>
         <BoxInfoContents>last updated: 2020/12/9</BoxInfoContents>
         <BoxInfoContents>12 items</BoxInfoContents>

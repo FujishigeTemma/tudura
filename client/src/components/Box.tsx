@@ -15,7 +15,7 @@ interface ErrorResponse {
   status: number
 }
 
-interface Item {
+export interface Item {
   id: string
   name: string
   expirationDate: Date
@@ -35,6 +35,8 @@ const Box: React.FC = () => {
   const history = useHistory()
   const [ isBox, setIsBox ] = useState(0) // 0 読み込み中 1 boxidが存在しない 2 boxidが存在する
   const [ isAuth, setIsAuth ] = useState(true) // 認証が必要かどうか
+  const [ boxName, setboxName ] = useState('')
+  const [ items, setItems ] = useState<Item[]>([])
 
 
   useEffect((): void => {
@@ -67,6 +69,8 @@ const Box: React.FC = () => {
     }
     setIsBox(2)
     setIsAuth(false)
+    setboxName(boxInfo.name)
+    setItems(boxInfo.items)
   }
 
   const getBoxes = async (): Promise<GetBoxesResponse | ErrorResponse | undefined> => (
@@ -90,7 +94,11 @@ const Box: React.FC = () => {
             />
           )}
           {!isAuth && (
-            <BoxContents boxid={boxid}/>
+            <BoxContents 
+              boxid={boxid}
+              boxName={boxName}
+              items = {items}
+            />
           )}
         </>
       )}
