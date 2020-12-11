@@ -51,12 +51,14 @@ const LogoIcon = styled(IconSvg)`
 `
 
 const LogoText = styled.div`
+  font-size: 3rem;
+  font-family: 'Roboto Mono';
+  letter-spacing: -0.07em;
   ${Screen.MOBILE} {
     //color: ${Color.TEXT_SECONDARY};
     font-size: 2.5rem;
   }
   color: ${Color.TEXT_PRIMARY};
-  font-size: 3rem;
 `
 
 const AddNewButton = styled.button`
