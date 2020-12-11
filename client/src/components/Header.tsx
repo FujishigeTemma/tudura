@@ -1,18 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
-import {ReactComponent as IconSvg} from '../img/icon.svg'
+import { ReactComponent as IconSvg } from '../img/icon.svg'
+import AddNewBox from './AddNewBox'
 
-const Header: React.FC = () => (
-  <HeaderBack>
-    <HeaderMain href='/'>
-      <LogoIcon></LogoIcon>
-      <LogoText>tudura</LogoText>
-    </HeaderMain>
-    <AddNewButton>Add New</AddNewButton>
-  </HeaderBack>
-)
+const Header: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const closeModal = (): void => {
+    setIsOpen(false)
+  }
+  const openModal = (): void => {
+    setIsOpen(true)
+  }
+  
+  return (
+    <HeaderBack>
+      <HeaderMain href='/'>
+        <LogoIcon></LogoIcon>
+        <LogoText>tudura</LogoText>
+      </HeaderMain>
+      <AddNewButton onClick={openModal}>
+        Add New
+      </AddNewButton>
+      <AddNewBox isOpen={isOpen} close={closeModal}></AddNewBox>
+    </HeaderBack>
+  )
+}
 
 const HeaderBack = styled.div`
   ${Screen.MOBILE} {

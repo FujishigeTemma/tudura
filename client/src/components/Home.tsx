@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {ReactComponent as IconSvg} from '../img/icon.svg'
+import { ReactComponent as IconSvg } from '../img/icon.svg'
 import Color from '../style/Color'
 
 const Home: React.FC = () => {
