@@ -27,8 +27,8 @@ const AddNewButton: React.FC = () => {
 
 const Button = styled.button`
   font-size: 1.4rem;
-  margin: 1rem max(calc(50% - 620px), 5%) 0.5rem;
-  padding: 0.4rem 1rem;
+  width: 8rem;
+  height:3rem;
   background-color: ${Color.PRIMARY};
   color: ${Color.BACKGROUND_PRIMARY};
   outline: none;

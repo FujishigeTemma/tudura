@@ -11,7 +11,9 @@ const Header: React.FC = () => (
       <LogoIcon></LogoIcon>
       <LogoText>tudura</LogoText>
     </HeaderMain>
-    <AddNewButton >Add New</AddNewButton>
+    <Button>
+      <AddNewButton >Add New</AddNewButton>
+    </Button>
   </HeaderBack>
 )
 
@@ -54,6 +56,10 @@ const LogoIcon = styled(IconSvg)`
   }
 `
 
+const Button = styled.div`
+  margin: 1rem max(calc(50% - 620px), 5%) 0.5rem;
+  padding: 0.4rem 1rem;
+  `
 const LogoText = styled.div`
   font-size: 3rem;
   font-family: 'Cabin Condensed', sans-serif;
