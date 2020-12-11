@@ -19,9 +19,8 @@ const HomeBody = styled.div`
 `
 
 const HomeText = styled.div`
-  font-family: 'Roboto Mono';
+  font-family: 'Cabin Condensed', sans-serif;
   font-size: 5rem;
-  letter-spacing: -0.07em;
   margin: 0 0 5rem;
 `
 
@@ -30,7 +29,7 @@ const Icon = styled(IconSvg)`
   height: 7rem;
   margin: 2rem 0 0;
   .circle {
-    fill: ${Color.BACKGROUND_SECONDARY};
+    fill: ${Color.PRIMARY_SUB};
   }
   .box {
     fill: ${Color.TEXT_SECONDARY};
