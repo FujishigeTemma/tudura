@@ -1,49 +1,81 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Modal from 'react-modal'
 import styled from 'styled-components'
 import Color from '../style/Color'
 
-// interface boxInputProps {
-//   name: string
-//   password: string
-// }
-
+interface BoxProps {
+  name: string
+  isLocked: boolean
+  password: string
+}
 
 
 //TODO:名前変える
 const NewBoxModal: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(true)
+  const [boxName, setBoxName] = useState('')
+  const [isLoked, setIsLocked] = useState(false)
+  const [boxPassword, setBoxPassword] = useState('')
+
+  const closeModal = (event: React.FormEvent): void => {
+    setIsOpen(false)
+    event.preventDefault()
+  }
+  const createBox = (event: React.FormEvent): BoxProps => {
+    closeModal(event)
+    console.log({ name: boxName, isLocked: isLoked, password: boxPassword })
+    return { name: boxName, isLocked: isLoked, password: boxPassword }
+  }
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setBoxName(event.target.value)
+  }
+  const handleChangeLocked = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setIsLocked(event.target.checked)
+  }
+  const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setBoxPassword(event.target.value)
+  }
+
+
   return (
-    <Modal ariaHideApp={false} isOpen={true} style={ModalStyle}>
-      <ModalForm>
+    <Modal ariaHideApp={false} isOpen={isOpen} style={ModalStyle}>
+      <ModalForm onSubmit={createBox}>
         <ModalTitle>Create New Box </ModalTitle>
         <BoxName>
           <ParamTitle>Name</ParamTitle>
           <BoxNameInputForm
             type='text'
-            name='name'
             placeholder='Enter BoxName'
+            onChange={handleChangeName}
             autoFocus
           />
         </BoxName>
         <PasswordForm>
           <ParamTitle>Password</ParamTitle>
-          <PasswordCheckBox></PasswordCheckBox>
+          <PasswordCheckBox
+            type='checkbox'
+            onChange={handleChangeLocked}
+          ></PasswordCheckBox>
         </PasswordForm>
         <PasswordInputForm
           type='password'
-          name='password'
           placeholder='Enter password'
-          autoFocus
+          onChange={handleChangePassword}
         />
+        <Create
+          type='submit'
+        >create</Create>
         <Link to='/'>
-          <Cancel type='button'>cancel</Cancel>
+          <Cancel
+            type='button'
+            onClick={closeModal}
+          >cancel</Cancel>
         </Link>
-        <Create type='submit'>submit</Create>
+
       </ModalForm>
     </Modal>
   )
-
 }
 
 const ModalStyle: Modal.Styles = {
@@ -128,7 +160,7 @@ const PasswordInputForm = styled.input`
     color: #C4C4C4;
   }
 `
-const PasswordCheckBox = styled.input.attrs({ type: 'checkbox' })`
+const PasswordCheckBox = styled.input`
   margin: 1em 0 0 0 ;
   transform:scale(2.0);
   flex-wrap:wrap
