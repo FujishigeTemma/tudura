@@ -1,0 +1,196 @@
+openapi: 3.0.0
+info:
+  title: tudura
+  version: "v0.1.0"
+  contact:
+    name: tudura
+    url: "https://github.com/FujishigeTemma/tudura"
+  description: tudura API
+
+paths:
+  '/boxes':
+    post:
+      summary: ボックスの追加
+      description: |-
+        ボックスを作成します。
+      tags:
+        - box
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Box"
+  '/boxes/{boxId}':
+    get:
+      summary: ボックスの概要を取得
+      description: |-
+        ボックスの概要を取得します。
+      tags:
+        - box
+      parameters:
+        - $ref: '#/components/parameters/boxIdInPath'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Box"
+    post:
+      summary: アイテムをアップロード
+      description: |-
+        アイテムをアップロードします。
+      tags:
+        - box
+        - item
+      parameters:
+        - $ref: '#/components/parameters/boxIdInPath'
+        - $ref: '#/components/parameters/itemIdInPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostItemRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+  '/boxes/{boxId}/{itemId}':
+    get:
+      summary: アイテムの詳細を取得
+      description: |-
+        アイテムの詳細を取得します。
+      tags:
+        - box
+        - item
+      parameters:
+        - $ref: '#/components/parameters/boxIdInPath'
+        - $ref: '#/components/parameters/itemIdInPath'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+
+
+components:
+  schemas:
+    Box:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: tudura
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              name:
+                type: string
+              expirationDate:
+                type: string
+                format: date-time
+                description: デフォルトは30分
+              passwordRequired:
+                type: boolean
+                default: false
+        updatedAt:
+          type: string
+          format: date-time
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    PostItemRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        duration:
+          type: integer
+          nullable: true
+          description: ない場合は30分。時間単位
+        password:
+          type: string
+          nullable: true
+          description: 大文字・小文字・記号が使用可能。8文字以上(18文字以上を推奨)
+  parameters:
+    boxIdInPath:
+      in: path
+      name: boxId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    itemIdInPath:
+      in: path
+      name: itemId
+      required: true
+      schema:
+        type: string
+        format: uuid
+    limitInQuery:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        default: 0
+        minimum: 1
+        maximum: 200
+      description: 取得する件数
+      example: 50
+    offsetInQuery:
+      in: query
+      name: offset
+      schema:
+        type: integer
+        default: 0
+      description: 取得するオフセット
+      example: 150
+    orderInQuery:
+      in: query
+      name: order
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+      description: 昇順か降順か
+    orderAttributeInQuery:
+      in: query
+      name: orderAttr
+      schema:
+        type: string
+        enum:
+          - posted_at
+          - challenged
+        default: posted_at
+      description: ソートに使用する属性
+  responses:
+    404NotFound:
+      description: The specified resource was not found.
+
+tags:
+  - name: box
+    description: ボックスAPI
+  - name: item
+    description: アイテムAPI
