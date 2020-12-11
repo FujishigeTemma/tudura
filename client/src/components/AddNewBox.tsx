@@ -1,28 +1,34 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import Modal from 'react-modal'
 import styled from 'styled-components'
 import Color from '../style/Color'
 
-interface BoxProps {
+interface BoxInfo {
   name: string
   isLocked: boolean
   password: string
 }
 
+interface BoxProps {
+  isOpen: boolean
+  close: VoidFunction
+}
 
 //TODO:名前変える
-const NewBoxModal: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true)
+const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
+
   const [boxName, setBoxName] = useState('')
   const [isLoked, setIsLocked] = useState(false)
   const [boxPassword, setBoxPassword] = useState('')
 
   const closeModal = (event: React.FormEvent): void => {
-    setIsOpen(false)
+    close()
+    setBoxName('')
+    setBoxPassword('')
+    setIsLocked(false)
     event.preventDefault()
   }
-  const createBox = (event: React.FormEvent): BoxProps => {
+  const createBox = (event: React.FormEvent): BoxInfo => {
     closeModal(event)
     console.log({ name: boxName, isLocked: isLoked, password: boxPassword })
     return { name: boxName, isLocked: isLoked, password: boxPassword }
@@ -66,13 +72,10 @@ const NewBoxModal: React.FC = () => {
         <Create
           type='submit'
         >create</Create>
-        <Link to='/'>
-          <Cancel
-            type='button'
-            onClick={closeModal}
-          >cancel</Cancel>
-        </Link>
-
+        <Cancel
+          type='button'
+          onClick={closeModal}
+        >cancel</Cancel>
       </ModalForm>
     </Modal>
   )
@@ -199,4 +202,4 @@ const Cancel = styled.button`
   }
 `
 
-export default NewBoxModal
+export default AddNewBox

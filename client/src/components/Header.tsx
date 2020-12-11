@@ -2,13 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
+import AddNewButton from './AddNewButton'
 
 const Header: React.FC = () => (
   <HeaderBack>
     <HeaderMain href='/'>
       <HeaderLogo>tudura</HeaderLogo>
     </HeaderMain>
-    <AddNewButton>Add New</AddNewButton>
+    <AddNewButton >Add New</AddNewButton>
   </HeaderBack>
 )
 
@@ -38,19 +39,5 @@ const HeaderLogo = styled.div`
   font-size: 3rem;
 `
 
-const AddNewButton = styled.button`
-  font-size: 1.4rem;
-  margin: 1rem max(calc(50% - 620px), 5%) 0.5rem;
-  padding: 0.4rem 1rem;
-  background-color: ${Color.PRIMARY};
-  color: ${Color.BACKGROUND_PRIMARY};
-  outline: none;
-  border-style: none;
-  border-radius: 0.6rem;
-  &:hover {
-    cursor: pointer;
-    opacity: 0.8;
-  }
-`
 
 export default Header
