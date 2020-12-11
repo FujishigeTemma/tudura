@@ -18,7 +18,7 @@ interface BoxProps {
 const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
 
   const [boxName, setBoxName] = useState('')
-  const [isLoked, setIsLocked] = useState(false)
+  const [isLocked, setIsLocked] = useState(false)
   const [boxPassword, setBoxPassword] = useState('')
 
   const closeModal = (event: React.FormEvent): void => {
@@ -30,8 +30,8 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
   }
   const createBox = (event: React.FormEvent): BoxInfo => {
     closeModal(event)
-    console.log({ name: boxName, isLocked: isLoked, password: boxPassword })
-    return { name: boxName, isLocked: isLoked, password: boxPassword }
+    console.log({ name: boxName, isLocked: isLocked, password: boxPassword })
+    return { name: boxName, isLocked: isLocked, password: boxPassword }
   }
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setBoxName(event.target.value)
