@@ -2,12 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
+import { ReactComponent as IconSvg } from '../img/icon.svg'
 import AddNewButton from './AddNewButton'
 
 const Header: React.FC = () => (
   <HeaderBack>
     <HeaderMain href='/'>
-      <HeaderLogo>tudura</HeaderLogo>
+      <LogoIcon></LogoIcon>
+      <LogoText>tudura</LogoText>
     </HeaderMain>
     <AddNewButton >Add New</AddNewButton>
   </HeaderBack>
@@ -19,24 +21,47 @@ const HeaderBack = styled.div`
     //box-shadow: 0 3px 3px 0 rgba(0, 0, 0, .25);
   }
   background: ${Color.BACKGROUND_PRIMARY};
-  position: relative;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
 `
 
 const HeaderMain = styled.a`
   text-decoration: none;
   width: fit-content;
-  margin: 0.5rem max(calc(50% - 620px), 5%);
+  display: flex;
+  margin: 0 max(calc(50% - 620px), 5%);
+  align-items: center;
 `
 
-const HeaderLogo = styled.div`
+const LogoIcon = styled(IconSvg)`
+  ${Screen.MOBILE} {
+    width: 2.5em;
+    height: 2.5em;
+  }
+  width: 3em;
+  height: 3em;
+  margin: 0 0.5em 0 0;
+  .circle {
+    fill: ${Color.PRIMARY_SUB};
+  }
+  .box {
+    fill: ${Color.TEXT_SECONDARY};
+  }
+  ${Screen.PHONE} {
+    display: none;
+  }
+`
+
+const LogoText = styled.div`
+  font-size: 3rem;
+  font-family: 'Cabin Condensed', sans-serif;
   ${Screen.MOBILE} {
     //color: ${Color.TEXT_SECONDARY};
     font-size: 2.5rem;
   }
   color: ${Color.TEXT_PRIMARY};
-  font-size: 3rem;
 `
 
 

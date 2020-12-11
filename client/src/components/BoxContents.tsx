@@ -85,7 +85,7 @@ const BoxGrid = styled.div`
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     grid-gap: 15px;
   }
-  @media screen and (max-width: 420px) {
+  ${Screen.PHONE} {
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 10px;
   }
