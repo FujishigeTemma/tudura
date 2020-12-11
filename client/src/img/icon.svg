@@ -1,0 +1,10 @@
+<svg width="380" height="380" viewBox="0 0 380 380" xmlns="http://www.w3.org/2000/svg">
+  <circle class="circle" cx="190" cy="190" r="190"/>
+  <g class="box">
+    <path d="M73 140L189 187.924V224.923L73 177V140Z" />
+    <path d="M84 190L189 233V309L84 266V190Z" />
+    <path d="M301 190L196 233V309L301 266V190Z" />
+    <path d="M192.5 80.876L313 130.876L192.5 180.876L72.0003 130.876L192.5 80.876Z" />
+    <path d="M312 140L196 187.967V225L312 177.033V140Z" />
+  </g>
+</svg>
