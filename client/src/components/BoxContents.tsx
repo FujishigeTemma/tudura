@@ -2,18 +2,22 @@ import React from 'react'
 import styled from 'styled-components'
 import Card from './Card'
 import UpLoadButton from './UpLoadButton'
+import { Item } from './Box'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
 
 interface BoxContentsProps {
   boxid: string
+  boxName: string
+  items: Item[]
 }
 
-const BoxContents: React.FC<BoxContentsProps> = ({ boxid }: BoxContentsProps) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const BoxContents: React.FC<BoxContentsProps> = ({ boxid, boxName, items }: BoxContentsProps) => {
 
   const renderCard = (): string[] => {
     const res: string[] = []
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
       res.push(`test ${i}`)
     }
     return res
@@ -21,7 +25,7 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid }: BoxContentsProps) =>
 
   return (
     <>
-      <BoxName>BoxName {boxid}</BoxName>
+      <BoxName>{boxName}</BoxName>
       <BoxInfo>
         <BoxInfoContents>last updated: 2020/12/9</BoxInfoContents>
         <BoxInfoContents>12 items</BoxInfoContents>
@@ -73,7 +77,7 @@ const BoxGrid = styled.div`
   display: grid;
   padding: 5rem 0;
   margin: 0 auto;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, auto));
   grid-gap: 20px;
   justify-content: center;
   align-content: top;
@@ -82,7 +86,7 @@ const BoxGrid = styled.div`
   }
   ${Screen.MOBILE} {
     padding: 2rem 0;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, auto));
     grid-gap: 15px;
   }
   ${Screen.PHONE} {
