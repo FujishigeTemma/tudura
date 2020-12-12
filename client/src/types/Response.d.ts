@@ -10,9 +10,11 @@ export interface GetBoxesResponse {
   updatedAt: Date
 }
 
-export interface ItemResponse {
+export interface PostItemResponse {
   id: string
+  boxId: string
   name: string
+  expiresAt: Date
 }
 
 export interface PostBoxesAuthResponse {

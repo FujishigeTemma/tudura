@@ -12,7 +12,6 @@ interface PasswordInputProps {
   authenticate: VoidFunction
 }
 
-
 const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, isAuth, authenticate }: PasswordInputProps) => {
 
   const [value, setValue] = useState('')
