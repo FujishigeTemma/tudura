@@ -23,20 +23,21 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
   const [boxNameError, setBoxNameError] = useState('')
 
   const closeModal = (event: React.FormEvent): void => {
-    if (boxName === '') {
-      setBoxNameError('Empty name is not allowed!')
-    }
-    else {
-      close()
-      setBoxName('')
-      setBoxPassword('')
-      setBoxNameError('')
-      setIsLocked(false)
-    }
+    close()
+    setBoxName('')
+    setBoxPassword('')
+    setBoxNameError('')
+    setIsLocked(false)
     event.preventDefault()
   }
   const createBox = (event: React.FormEvent): BoxInfo => {
-    closeModal(event)
+    if (boxName === '') {
+      setBoxNameError('Empty name is not allowed!')
+      event.preventDefault()
+    }
+    else {
+      closeModal(event)
+    }
     console.log({ name: boxName, isLocked: isLocked, password: boxPassword })
     return { name: boxName, isLocked: isLocked, password: boxPassword }
   }
