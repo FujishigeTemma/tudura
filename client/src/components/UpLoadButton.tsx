@@ -6,7 +6,7 @@ import Screen from '../style/Screen'
 import { ReactComponent as UploadIconSvg } from '../img/upload_icon.svg'
 import { ErrorResponse, ItemResponse } from '../types/Response'
 
-interface PostItemReqest {
+interface PostItemRequest {
   name: string
   duration: number | null
 }
@@ -30,7 +30,7 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
     setFileSelector(buildFileSelector())
   }, [])
 
-  const postItem = async (item: PostItemReqest, file: File): Promise<ItemResponse | ErrorResponse | Error> => {
+  const postItem = async (item: PostItemRequest, file: File): Promise<ItemResponse | ErrorResponse | Error> => {
     try {
       const formData = new FormData()
       formData.append('json', JSON.stringify(item))
@@ -43,7 +43,7 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
       const res = await axios.post<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/PostItemHandler/boxes/${boxid}`, formData, header)
       console.log(res.data)
       return res.data
-    } catch(err) {
+    } catch (err) {
       if (err.response as ErrorResponse) {
         return err.response
       }
@@ -61,17 +61,17 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
       if (fileSelector?.files != undefined) {
         /* for (let i = 0; i < fileSelector.files.length; i++) {
           console.log(fileSelector.files[i].name)
-          const reqest: PostItemReqest = {
+          const request: PostItemRequest = {
             name: fileSelector.files[i].name,
             duration: null
           }
-          postItem(reqest)
+          postItem(request)
         } */
-        const reqest: PostItemReqest = {
+        const request: PostItemRequest = {
           name: fileSelector.files[0].name,
           duration: null
         }
-        postItem(reqest, fileSelector.files[0])
+        postItem(request, fileSelector.files[0])
         setFileSelector(buildFileSelector()) //stateを初期化
       }
     }

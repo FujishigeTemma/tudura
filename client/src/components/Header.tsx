@@ -14,7 +14,7 @@ const Header: React.FC = () => {
   const openModal = (): void => {
     setIsOpen(true)
   }
-  
+
   return (
     <HeaderBack>
       <HeaderMain href='/'>

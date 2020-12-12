@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import Modal from 'react-modal'
 import styled from 'styled-components'
+import axios from 'axios'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
+import { PostBoxesResponse, ErrorResponse } from '../types/Response'
 
-interface BoxInfo {
-  name: string
-  isLocked: boolean
-  password: string
-}
 
 interface BoxProps {
   isOpen: boolean
@@ -16,11 +14,29 @@ interface BoxProps {
 }
 
 const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
-
+  const history = useHistory()
   const [boxName, setBoxName] = useState('')
   const [isLocked, setIsLocked] = useState(false)
   const [boxPassword, setBoxPassword] = useState('')
   const [boxNameError, setBoxNameError] = useState('')
+
+  const postBoxes = async (): Promise<PostBoxesResponse | ErrorResponse | Error> => {
+    try {
+      const res = await axios.post<PostBoxesResponse>(`${process.env.REACT_APP_API_SERVER}/PostBoxHandler`, {
+        "name": boxName,
+        "password": boxPassword
+      })
+      return res.data
+    } catch (err) {
+      if (err.response as ErrorResponse) {
+        return err.response
+      }
+      if (err instanceof Error) {
+        return err
+      }
+      return new Error
+    }
+  }
 
   const closeModal = (event: React.FormEvent): void => {
     close()
@@ -30,16 +46,27 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
     setIsLocked(false)
     event.preventDefault()
   }
-  const createBox = (event: React.FormEvent): BoxInfo => {
+  const createBox = async (event: React.FormEvent) => {
+    event.preventDefault()
+    console.log(boxName)
     if (boxName === '') {
       setBoxNameError('Empty name is not allowed!')
       event.preventDefault()
     }
     else {
-      closeModal(event)
+      const boxInfo = await postBoxes()
+      console.log(boxInfo)
+      if (boxInfo instanceof Error || 'status' in boxInfo) {
+        //TODO:いい感じに通知を出す
+        return
+      }
+      if ('id' in boxInfo) {
+        history.push('/')
+        closeModal(event)
+        return
+      }
     }
-    console.log({ name: boxName, isLocked: isLocked, password: boxPassword })
-    return { name: boxName, isLocked: isLocked, password: boxPassword }
+    console.log('finish')
   }
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setBoxName(event.target.value)
