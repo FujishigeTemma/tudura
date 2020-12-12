@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import axios, { AxiosError } from 'axios'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
 import { ReactComponent as UploadIconSvg } from '../img/upload_icon.svg'
-import axios, { AxiosError } from 'axios'
-import { ErrorResponse } from './Box'
-import { ItemResponse } from './Card'
+import { ErrorResponse, ItemResponse } from '../types/Response'
 
 interface PostItemReqest {
   name: string
   duration: number | null
 }
-
-
 
 interface UploadProps {
   boxid: string
@@ -33,16 +30,22 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
     setFileSelector(buildFileSelector())
   }, [])
 
-  const postItem = async (item: PostItemReqest): Promise<ItemResponse | ErrorResponse | undefined> => (
-    await axios.post<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}`, item)
-      .then(res => (res.data))
-      .catch((err: AxiosError<ErrorResponse>) => (err.response?.data))
-  )
-
-
+  const postItem = async (item: PostItemReqest): Promise<ItemResponse | ErrorResponse | Error> => {
+    try {
+      const res = await axios.post<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}`, item)
+      return res.data
+    } catch(err) {
+      if (err.response as AxiosError<ErrorResponse>) {
+        return err.response.data
+      }
+      if (err instanceof Error) {
+        return err
+      }
+      return new Error
+    }
+  }
 
   const handleFileSelect = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-
     event.preventDefault();
     (fileSelector as HTMLInputElement).click()
     fileSelector?.addEventListener('change', () => {
@@ -55,7 +58,7 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
           }
           postItem(reqest)
         }
-        setFileSelector(buildFileSelector())//stateを初期化
+        setFileSelector(buildFileSelector()) //stateを初期化
       }
     }
     )
