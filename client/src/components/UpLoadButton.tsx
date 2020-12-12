@@ -7,14 +7,14 @@ import axios, { AxiosError } from 'axios'
 import { ErrorResponse } from './Box'
 import { ItemResponse } from './Card'
 
-interface postItemReqest {
+interface PostItemReqest {
   name: string
   duration: number | null
 }
 
 
 
-interface uploadProps {
+interface UploadProps {
   boxid: string
 }
 
@@ -26,14 +26,14 @@ const buildFileSelector = (): HTMLInputElement => {
 }
 
 
-const UpLoadButton: React.FC<uploadProps> = ({ boxid }: uploadProps) => {
+const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
 
   const [fileSelector, setFileSelector] = useState<HTMLInputElement>()
   useEffect(() => {
     setFileSelector(buildFileSelector())
   }, [])
 
-  const postItem = async (item: postItemReqest): Promise<ItemResponse | ErrorResponse | undefined> => (
+  const postItem = async (item: PostItemReqest): Promise<ItemResponse | ErrorResponse | undefined> => (
     await axios.post<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}`, item)
       .then(res => (res.data))
       .catch((err: AxiosError<ErrorResponse>) => (err.response?.data))
@@ -49,7 +49,7 @@ const UpLoadButton: React.FC<uploadProps> = ({ boxid }: uploadProps) => {
       if (fileSelector?.files != undefined) {
         for (let i = 0; i < fileSelector.files.length; i++) {
           console.log(fileSelector.files[i].name)
-          const reqest: postItemReqest = {
+          const reqest: PostItemReqest = {
             name: fileSelector.files[i].name,
             duration: null
           }
