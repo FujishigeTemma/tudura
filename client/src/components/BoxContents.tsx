@@ -66,16 +66,16 @@ const BoxGrid = styled.div`
   display: grid;
   padding: 5rem 0;
   margin: 0 auto;
-  grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+  grid-template-columns: repeat(auto-fill, minmax( min(100%, 200px), 1fr));
   grid-gap: 20px;
-  justify-content: start;
+  justify-content: center;
   align-content: top;
   ${Screen.WINDOW} {
     max-width: max(1000px, 60%);
   }
   ${Screen.MOBILE} {
     padding: 2rem 0;
-    grid-template-columns: repeat(auto-fit, minmax(180px, auto));
+    grid-template-columns: repeat(auto-fill, minmax( min(100%, 180px), 1fr));
     grid-gap: 15px;
   }
   ${Screen.PHONE} {
