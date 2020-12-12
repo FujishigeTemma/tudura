@@ -93,9 +93,11 @@ const FileName = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: ${Color.TEXT_PRIMARY};
 `
 
 const CardDefault = styled.a`
+  text-decoration: none;
   border-radius: 5%;
   position: relative;
   border: solid 2px ${Color.PRIMARY_SUB};
