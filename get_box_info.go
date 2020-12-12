@@ -16,13 +16,6 @@ type boxWithItems struct {
 	UpdatedAt        time.Time `json:"updatedAt" db:"updated_at"`
 }
 
-type item struct {
-	ID        string    `json:"id" db:"id"`
-	Name      string    `json:"name" db:"name"`
-	Size      int       `json:"size" db:"size"`
-	ExpiresAt time.Time `json:"expiresAt" db:"expires_at"`
-}
-
 // GetBoxHandler POST /boxes/{boxId} ボックスの概要を取得
 func GetBoxHandler(w http.ResponseWriter, r *http.Request) {
 	clientOnce.Do(func() {

@@ -169,6 +169,7 @@ func uploadFile(r io.Reader, bucket, object string, duration int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*50)
 	defer cancel()
 
+	// TODO: gzip
 	// TODO: durationに応じてbucketを振り分ける(HotSpotになってよくなさそう)
 	wc := storageClient.Bucket(bucket).Object(object).NewWriter(ctx)
 	if _, err := io.Copy(wc, r); err != nil {
