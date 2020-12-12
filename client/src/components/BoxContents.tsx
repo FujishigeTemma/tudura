@@ -12,22 +12,7 @@ interface BoxContentsProps {
   items: Item[]
 }
 
-interface CardContent {
-  itemid: string
-  key: string
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const BoxContents: React.FC<BoxContentsProps> = ({ boxid, boxName, items }: BoxContentsProps) => {
-
-  const renderCard = (): CardContent[] => {
-    const res: CardContent[] = []
-    for (let i = 0; i < items.length; i++) {
-      res.push({ itemid: items[i].id, key: '${i}' })
-    }
-    return res
-  }
-
   return (
     <>
       <BoxName>{boxName}</BoxName>
@@ -37,15 +22,14 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid, boxName, items }: BoxC
         <BoxInfoContents>14/200 GB</BoxInfoContents>
       </BoxInfo>
       <BoxGrid>
-        {renderCard().map((c: CardContent) => (
-          <Card key={c.key} boxid={boxid} itemid={c.itemid} />
+        {items.map((item: Item) => (
+          <Card key={item.id} boxid={boxid} item={item} />
         ))}
       </BoxGrid>
       <UpLoadButton boxid={boxid}></UpLoadButton>
     </>
   )
 }
-
 
 const BoxName = styled.div`
   text-align: center;
@@ -82,7 +66,7 @@ const BoxGrid = styled.div`
   display: grid;
   padding: 5rem 0;
   margin: 0 auto;
-  grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+  grid-template-columns: repeat(auto-fill, minmax( min(100%, 200px), 1fr));
   grid-gap: 20px;
   justify-content: center;
   align-content: top;
@@ -91,7 +75,7 @@ const BoxGrid = styled.div`
   }
   ${Screen.MOBILE} {
     padding: 2rem 0;
-    grid-template-columns: repeat(auto-fit, minmax(180px, auto));
+    grid-template-columns: repeat(auto-fill, minmax( min(100%, 180px), 1fr));
     grid-gap: 15px;
   }
   ${Screen.PHONE} {

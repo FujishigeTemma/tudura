@@ -1,5 +1,5 @@
 import React from 'react'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import styled from 'styled-components'
 import SaveFile from './Savefile'//デバッグ用
 import { Item } from './Box'
@@ -7,18 +7,18 @@ import { ErrorResponse, ItemResponse } from '../types/Response'
 
 interface ItemProps {
   boxid: string
-  itemid: string
+  item: Item
 }
 
-const Card: React.FC<ItemProps> = ({ boxid, itemid }: ItemProps) => {
+const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getItem = async (): Promise<Item | ErrorResponse | Error> => {
     try {
-      const res = await axios.get<Item>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}/${itemid}`)
+      const res = await axios.get<Item>(`${process.env.REACT_APP_API_SERVER_D}/boxes/${boxid}/${item.id}`)
       return res.data
     } catch(err) {
-      if (err.response as AxiosError<ErrorResponse>) {
-        return err.response.data
+      if (err.response as ErrorResponse) {
+        return err.response
       }
       if (err instanceof Error) {
         return err
@@ -30,11 +30,11 @@ const Card: React.FC<ItemProps> = ({ boxid, itemid }: ItemProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const deleteItem = async (): Promise<ItemResponse | ErrorResponse | Error> => {
     try {
-      const res = await axios.delete<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}/${itemid}`)
+      const res = await axios.delete<ItemResponse>(`${process.env.REACT_APP_API_SERVER_D}/boxes/${boxid}/${item.id}`)
       return res.data
     } catch(err) {
-      if (err.response as AxiosError<ErrorResponse>) {
-        return err.response.data
+      if (err.response as ErrorResponse) {
+        return err.response
       }
       if (err instanceof Error) {
         return err
@@ -48,7 +48,7 @@ const Card: React.FC<ItemProps> = ({ boxid, itemid }: ItemProps) => {
   }
 
   return (
-    <CardDefault onClick={() => saveDownloadFile()}></CardDefault>
+    <CardDefault onClick={() => saveDownloadFile()}>{item.name}</CardDefault>
   )
 }
 

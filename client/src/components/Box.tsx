@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import styled from 'styled-components'
 import { useParams, useHistory } from 'react-router-dom'
 import BoxContents from './BoxContents'
@@ -57,16 +57,18 @@ const Box: React.FC = () => {
     setIsBox(2)
     setIsAuth(false)
     setboxName(boxInfo.name)
-    setItems(boxInfo.items)
+    if (boxInfo.items !== null) {
+      setItems(boxInfo.items)
+    }
   }
 
   const getBoxes = async (): Promise<GetBoxesResponse | ErrorResponse | Error> => {
     try {
-      const res = await axios.get<GetBoxesResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}`)
+      const res = await axios.get<GetBoxesResponse>(`${process.env.REACT_APP_API_SERVER}/GetBoxHandler/boxes/${boxid}`)
       return res.data
     } catch(err) {
-      if (err.response as AxiosError<ErrorResponse>) {
-        return err.response.data
+      if (err.response as ErrorResponse) {
+        return err.response
       }
       if (err instanceof Error) {
         return err

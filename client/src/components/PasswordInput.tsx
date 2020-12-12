@@ -22,6 +22,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, isAuth, authentica
     event.preventDefault()
     const resAuth = await authBoxes(value)
     if (resAuth instanceof Error || 'status' in resAuth || !resAuth.result) {
+      setValue('')
       return
     }
     authenticate()
@@ -33,7 +34,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, isAuth, authentica
   
   const authBoxes = async (password: string): Promise<PostBoxesAuthResponse | ErrorResponse | Error> => {
     try {
-      const res = await axios.post<PostBoxesAuthResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}/auth`, {password: password})
+      const res = await axios.post<PostBoxesAuthResponse>(`${process.env.REACT_APP_API_SERVER_D}/boxes/${boxid}/auth`, {password: password})
       return res.data
     } catch(err) {
       if (err.response as AxiosError<ErrorResponse>) {
@@ -54,6 +55,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, isAuth, authentica
           type='password'
           name='password'
           placeholder='Enter password'
+          value={value}
           onChange={handleChange}
           onSubmit={verifyPassword}
           autoFocus
