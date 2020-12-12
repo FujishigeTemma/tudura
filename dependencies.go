@@ -1,7 +1,10 @@
 package function
 
 import (
+	"cloud.google.com/go/storage"
+	"context"
 	"github.com/jmoiron/sqlx"
+
 	"log"
 	"os"
 	"sync"
@@ -11,14 +14,18 @@ import (
 // which is automatically set by the Cloud Functions runtime.
 
 var (
-	clientOnce sync.Once
-	dbPool     *sqlx.DB
+	clientOnce    sync.Once
+	dbPool        *sqlx.DB
+	storageClient *storage.Client
 
 	Trace   *log.Logger
 	Info    *log.Logger
 	Warning *log.Logger
 	Error   *log.Logger
 )
+
+var ctx = context.Background()
+var bucketName = getEnv("BUCKET", "tudura")
 
 func init() {
 	Trace = log.New(os.Stdout, "TRACE: ", log.Ldate|log.Ltime|log.Lshortfile)
