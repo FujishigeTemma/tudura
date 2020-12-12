@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from 'react'
+import axios, { AxiosError } from 'axios'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
-import {ReactComponent as UploadIconSvg} from '../img/upload_icon.svg'
+import { ReactComponent as UploadIconSvg } from '../img/upload_icon.svg'
+import { ErrorResponse, ItemResponse } from '../types/Response'
+
+interface PostItemReqest {
+  name: string
+  duration: number | null
+}
+
+interface UploadProps {
+  boxid: string
+}
 
 const buildFileSelector = (): HTMLInputElement => {
   const fileSelector: HTMLInputElement = document.createElement('input');
@@ -11,25 +22,43 @@ const buildFileSelector = (): HTMLInputElement => {
   return fileSelector;
 }
 
-const UpLoadButton: React.FC = () => {
+
+const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
 
   const [fileSelector, setFileSelector] = useState<HTMLInputElement>()
   useEffect(() => {
     setFileSelector(buildFileSelector())
   }, [])
 
+  const postItem = async (item: PostItemReqest): Promise<ItemResponse | ErrorResponse | Error> => {
+    try {
+      const res = await axios.post<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}`, item)
+      return res.data
+    } catch(err) {
+      if (err.response as AxiosError<ErrorResponse>) {
+        return err.response.data
+      }
+      if (err instanceof Error) {
+        return err
+      }
+      return new Error
+    }
+  }
 
   const handleFileSelect = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
-
     event.preventDefault();
     (fileSelector as HTMLInputElement).click()
     fileSelector?.addEventListener('change', () => {
       if (fileSelector?.files != undefined) {
         for (let i = 0; i < fileSelector.files.length; i++) {
           console.log(fileSelector.files[i].name)
-          //TODO:アップロードする操作を実装
+          const reqest: PostItemReqest = {
+            name: fileSelector.files[i].name,
+            duration: null
+          }
+          postItem(reqest)
         }
-        setFileSelector(buildFileSelector())//stateを初期化
+        setFileSelector(buildFileSelector()) //stateを初期化
       }
     }
     )
