@@ -107,6 +107,7 @@ func PostBoxHandler(w http.ResponseWriter, r *http.Request) {
 	if _, err := dbPool.Exec("INSERT INTO boxes(`id`, `name`) VALUES (?, ?)", id.String(), req.Name); err != nil {
 		http.Error(w, "DB Error", http.StatusInternalServerError)
 		Error.Printf("error occured when INSERT box record: %s", err)
+		return
 	}
 	var createdBox box
 	if err := dbPool.Get(&createdBox, "SELECT id, name, CASE WHEN hashed_pass IS NOT NULL THEN 1 ELSE 0 END AS password_required, updated_at FROM boxes WHERE id = ?", id.String()); err != nil {
