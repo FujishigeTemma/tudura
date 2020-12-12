@@ -20,12 +20,19 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
   const [boxName, setBoxName] = useState('')
   const [isLocked, setIsLocked] = useState(false)
   const [boxPassword, setBoxPassword] = useState('')
+  const [boxNameError, setBoxNameError] = useState('')
 
   const closeModal = (event: React.FormEvent): void => {
-    close()
-    setBoxName('')
-    setBoxPassword('')
-    setIsLocked(false)
+    if (boxName === '') {
+      setBoxNameError('Empty name is not allowed!')
+    }
+    else {
+      close()
+      setBoxName('')
+      setBoxPassword('')
+      setBoxNameError('')
+      setIsLocked(false)
+    }
     event.preventDefault()
   }
   const createBox = (event: React.FormEvent): BoxInfo => {
@@ -50,13 +57,17 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
         <ModalTitle>Create New Box </ModalTitle>
         <BoxName>
           <ParamTitle>Name</ParamTitle>
-          <BoxNameInputForm
-            type='text'
-            placeholder='Enter BoxName'
-            onChange={handleChangeName}
-            autoFocus
-          />
+          <InputForm>
+            <BoxNameInputForm
+              type='text'
+              placeholder='Enter BoxName'
+              onChange={handleChangeName}
+              autoFocus
+            />
+            <NotSatisfied>{boxNameError}</NotSatisfied>
+          </InputForm>
         </BoxName>
+
         <PasswordForm>
           <ParamTitle>Password</ParamTitle>
           <PasswordCheckBox
@@ -70,6 +81,7 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
           disabled={!isLocked}
           onChange={handleChangePassword}
         />
+        <NotSatisfied></NotSatisfied>
         <Create type='submit'>create</Create>
         <Cancel type='button' onClick={closeModal}>cancel</Cancel>
       </ModalForm>
@@ -101,7 +113,6 @@ const ModalForm = styled.form`
 const BoxName = styled.div`
   display: flex;
   justify-content: center;
-  margin: 0 0 1em 0;
 `
 
 const ModalTitle = styled.div`
@@ -119,7 +130,6 @@ const BoxNameInputForm = styled.input`
   display: flex;
   font-size: 1.5em;
   padding: 0.3em;
-  margin: 0 0 0 1.2em;
   border-radius: 0.5em;
   outline: none;
   border: 2px solid ${Color.SECONDARY_SUB};
@@ -164,6 +174,15 @@ const PasswordCheckBox = styled.input`
   transform: scale(1.8);
 `
 
+const NotSatisfied = styled.div`
+  height: 1.5em;
+  font-size: 1em;
+  color: ${Color.WARNING};
+`
+const InputForm = styled.div`
+  display: block;
+  margin: 0 0 0 1.2em;
+`
 const Create = styled.button`
   font-size: 1.4em;
   width: 40%;
