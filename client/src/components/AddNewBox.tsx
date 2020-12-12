@@ -24,7 +24,7 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
 
   const closeModal = (event: React.FormEvent): void => {
     if (boxName === '') {
-      setBoxNameError('input box name')
+      setBoxNameError('Empty name is not allowed!')
       event.preventDefault()
     }
     else {
