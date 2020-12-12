@@ -7,8 +7,8 @@ import (
 
 func getDBPool() (*sqlx.DB, error) {
 	mysqlConfig := mysql.NewConfig()
-	mysqlConfig.Net = "unix"
-	mysqlConfig.Addr = getEnv("INSTANCE_CONNECTION_NAME", "project:region:instance") + getEnv("MYSQL_SOCKET_DIR", "/cloudsql")
+	mysqlConfig.Net = "tcp"
+	mysqlConfig.Addr = getEnv("MYSQL_HOST", "127.0.0.1") + ":" + getEnv("MYSQL_PORT", "3306")
 	mysqlConfig.User = getEnv("MYSQL_USER", "tudura")
 	mysqlConfig.Passwd = getEnv("MYSQL_PASS", "password")
 	mysqlConfig.DBName = getEnv("MYSQL_DATABASE", "tudura")

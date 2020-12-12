@@ -1,14 +1,19 @@
 package function
 
 import (
+	"github.com/jmoiron/sqlx"
 	"log"
 	"os"
+	"sync"
 )
 
 // projectID is set from the GCP_PROJECT environment variable,
 // which is automatically set by the Cloud Functions runtime.
 
 var (
+	clientOnce sync.Once
+	dbPool     *sqlx.DB
+
 	Trace   *log.Logger
 	Info    *log.Logger
 	Warning *log.Logger
