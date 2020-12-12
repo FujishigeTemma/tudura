@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { BrowserRouter } from 'react-router-dom'
 import Color from '../style/Color'
 import Router from './Router'
 import Header from './Header'
@@ -7,12 +8,14 @@ import Header from './Header'
 const App: React.FC = () => {
   return (
     <div className="App">
-      <Page>
-        <Header></Header>
-        <PageBody>
-          <Router></Router>
-        </PageBody>
-      </Page>
+      <BrowserRouter>
+        <Page>
+          <Header></Header>
+          <PageBody>
+            <Router></Router>
+          </PageBody>
+        </Page>
+      </BrowserRouter>
     </div>
   )
 }

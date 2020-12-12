@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, withRouter, RouteComponentProps } from 'react-router-dom'
 import Modal from 'react-modal'
 import styled from 'styled-components'
 import axios from 'axios'
@@ -8,7 +8,7 @@ import Screen from '../style/Screen'
 import { PostBoxesResponse, ErrorResponse } from '../types/Response'
 
 
-interface BoxProps {
+interface BoxProps extends RouteComponentProps {
   isOpen: boolean
   close: VoidFunction
 }
@@ -22,7 +22,7 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
 
   const postBoxes = async (): Promise<PostBoxesResponse | ErrorResponse | Error> => {
     try {
-      const res = await axios.post<PostBoxesResponse>(`${process.env.REACT_APP_API_SERVER}/PostBoxHandler`, {
+      const res = await axios.post<PostBoxesResponse>(`${process.env.REACT_APP_API_SERVER}/PostBoxHandler/boxes`, {
         "name": boxName,
         "password": boxPassword
       })
@@ -60,14 +60,11 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
         //TODO:いい感じに通知を出す
         return
       }
-      if ('id' in boxInfo) {
-        history.push('/')
-        closeModal(event)
-        return
-      }
+      closeModal(event)
+      history.push(`/${boxInfo.id}`)
     }
-    console.log('finish')
   }
+  
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setBoxName(event.target.value)
   }
@@ -244,4 +241,4 @@ const Cancel = styled.button`
   }
 `
 
-export default AddNewBox
+export default withRouter(AddNewBox)

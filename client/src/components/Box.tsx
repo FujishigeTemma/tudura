@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, withRouter } from 'react-router-dom'
 import BoxContents from './BoxContents'
 import PasswordInput from './PasswordInput'
 import Screen from '../style/Screen'
@@ -20,7 +20,6 @@ export interface Item {
 const Box: React.FC = () => {
 
   const { boxid } = useParams<BoxParams>()
-  const history = useHistory()
   const [isBox, setIsBox] = useState(0) // 0 読み込み中 1 boxidが存在しない 2 boxidが存在する
   const [isAuth, setIsAuth] = useState(true) // 認証が必要かどうか
   const [boxName, setboxName] = useState('')
@@ -37,7 +36,6 @@ const Box: React.FC = () => {
   const setBoxInfo = async () => {
     const boxInfo = await getBoxes()
     if (boxInfo instanceof Error) {
-      history.push('/')
       return
     }
     if ('status' in boxInfo) {
@@ -116,4 +114,4 @@ const BoxBody = styled.div`
   padding: 2rem 4rem;
 `
 
-export default Box
+export default withRouter(Box)
