@@ -83,6 +83,7 @@ func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Length", string(len(file)))
+	w.Header().Set("Content-Disposition", "attachment")
 	w.Write(file)
 }
 
