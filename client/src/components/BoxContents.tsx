@@ -12,13 +12,18 @@ interface BoxContentsProps {
   items: Item[]
 }
 
+interface CardContent {
+  itemid: string
+  key: string
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const BoxContents: React.FC<BoxContentsProps> = ({ boxid, boxName, items }: BoxContentsProps) => {
 
-  const renderCard = (): string[] => {
-    const res: string[] = []
-    for (let i = 0; i < 10; i++) {
-      res.push(`test ${i}`)
+  const renderCard = (): CardContent[] => {
+    const res: CardContent[] = []
+    for (let i = 0; i < items.length; i++) {
+      res.push({ itemid: items[i].id, key: '${i}' })
     }
     return res
   }
@@ -32,11 +37,11 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid, boxName, items }: BoxC
         <BoxInfoContents>14/200 GB</BoxInfoContents>
       </BoxInfo>
       <BoxGrid>
-        {renderCard().map((n: string) => (
-          <Card key={n} />
+        {renderCard().map((c: CardContent) => (
+          <Card key={c.key} boxid={boxid} itemid={c.itemid} />
         ))}
       </BoxGrid>
-      <UpLoadButton></UpLoadButton>
+      <UpLoadButton boxid={boxid}></UpLoadButton>
     </>
   )
 }

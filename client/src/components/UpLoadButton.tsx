@@ -4,21 +4,18 @@ import Color from '../style/Color'
 import Screen from '../style/Screen'
 import { ReactComponent as UploadIconSvg } from '../img/upload_icon.svg'
 import axios, { AxiosError } from 'axios'
-import { Item, ErrorResponse } from './Box'
+import { ErrorResponse } from './Box'
+import { ItemResponse } from './Card'
 
 interface postItemReqest {
   name: string
   duration: number | null
 }
 
-interface itemResponse {
-  id: string
-  name: string
-}
 
-interface itemProps {
+
+interface uploadProps {
   boxid: string
-  itemid: string
 }
 
 const buildFileSelector = (): HTMLInputElement => {
@@ -29,30 +26,19 @@ const buildFileSelector = (): HTMLInputElement => {
 }
 
 
-const UpLoadButton: React.FC<itemProps> = (props) => {
+const UpLoadButton: React.FC<uploadProps> = ({ boxid }: uploadProps) => {
 
   const [fileSelector, setFileSelector] = useState<HTMLInputElement>()
   useEffect(() => {
     setFileSelector(buildFileSelector())
   }, [])
 
-  const postItem = async (item: postItemReqest): Promise<itemResponse | ErrorResponse | undefined> => (
-    await axios.post<itemResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${props.boxid}`, item)
+  const postItem = async (item: postItemReqest): Promise<ItemResponse | ErrorResponse | undefined> => (
+    await axios.post<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}`, item)
       .then(res => (res.data))
       .catch((err: AxiosError<ErrorResponse>) => (err.response?.data))
   )
 
-  const getItem = async (): Promise<Item | ErrorResponse | undefined> => (
-    await axios.get<Item>(`${process.env.REACT_APP_API_SERVER}/boxes/${props.boxid}/${props.itemid}`)
-      .then(res => (res.data))
-      .catch((err: AxiosError<ErrorResponse>) => (err.response?.data))
-  )
-
-  const deleteItem = async (): Promise<itemResponse | ErrorResponse | undefined> => (
-    await axios.delete<itemResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${props.boxid}/${props.itemid}`)
-      .then(res => (res.data))
-      .catch((err: AxiosError<ErrorResponse>) => (err.response?.data))
-  )
 
 
   const handleFileSelect = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
