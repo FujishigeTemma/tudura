@@ -35,6 +35,7 @@ func PostBoxHandler(w http.ResponseWriter, r *http.Request) {
 
 	var req postBoxRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
 		Error.Printf("json.NewDecoder: %s", err)
 		return
 	}
