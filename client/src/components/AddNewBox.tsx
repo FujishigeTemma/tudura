@@ -101,7 +101,7 @@ const ModalForm = styled.form`
 const BoxName = styled.div`
   display: flex;
   justify-content: center;
-  margin: 0 0 1em 0;
+  margin: 0 0 1.8em 0;
 `
 
 const ModalTitle = styled.div`
