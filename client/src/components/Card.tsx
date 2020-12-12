@@ -3,7 +3,7 @@ import axios from 'axios'
 import styled from 'styled-components'
 import SaveFile from './Savefile'//デバッグ用
 import { Item } from './Box'
-import { ErrorResponse, ItemResponse } from '../types/Response'
+import { ErrorResponse, PostItemResponse } from '../types/Response'
 
 interface ItemProps {
   boxid: string
@@ -14,7 +14,7 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getItem = async (): Promise<Item | ErrorResponse | Error> => {
     try {
-      const res = await axios.get<Item>(`${process.env.REACT_APP_API_SERVER_D}/boxes/${boxid}/${item.id}`)
+      const res = await axios.get<Item>(`${process.env.REACT_APP_API_SERVER}/GetItemHandler/boxes/${boxid}/${item.id}`)
       return res.data
     } catch(err) {
       if (err.response as ErrorResponse) {
@@ -28,9 +28,9 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const deleteItem = async (): Promise<ItemResponse | ErrorResponse | Error> => {
+  const deleteItem = async (): Promise<PostItemResponse | ErrorResponse | Error> => {
     try {
-      const res = await axios.delete<ItemResponse>(`${process.env.REACT_APP_API_SERVER_D}/boxes/${boxid}/${item.id}`)
+      const res = await axios.delete<PostItemResponse>(`${process.env.REACT_APP_API_SERVER_D}/boxes/${boxid}/${item.id}`)
       return res.data
     } catch(err) {
       if (err.response as ErrorResponse) {

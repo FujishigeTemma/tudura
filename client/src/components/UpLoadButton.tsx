@@ -3,10 +3,11 @@ import axios from 'axios'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
+import { useItems, Item } from './Box'
 import { ReactComponent as UploadIconSvg } from '../img/upload_icon.svg'
-import { ErrorResponse, ItemResponse } from '../types/Response'
+import { ErrorResponse, PostItemResponse } from '../types/Response'
 
-interface PostItemReqest {
+interface PostItemRequest {
   name: string
   duration: number | null
 }
@@ -25,12 +26,14 @@ const buildFileSelector = (): HTMLInputElement => {
 
 const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
 
+  const { items, updateItems } = useItems()
   const [fileSelector, setFileSelector] = useState<HTMLInputElement>()
+
   useEffect(() => {
     setFileSelector(buildFileSelector())
   }, [])
 
-  const postItem = async (item: PostItemReqest, file: File): Promise<ItemResponse | ErrorResponse | Error> => {
+  const postItem = async (item: PostItemRequest, file: File): Promise<PostItemResponse | ErrorResponse | Error> => {
     try {
       const formData = new FormData()
       formData.append('json', JSON.stringify(item))
@@ -40,8 +43,7 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
           'content-type': 'multipart/form-data'
         }
       }
-      const res = await axios.post<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/PostItemHandler/boxes/${boxid}`, formData, header)
-      console.log(res.data)
+      const res = await axios.post<PostItemResponse>(`${process.env.REACT_APP_API_SERVER}/PostItemHandler/boxes/${boxid}`, formData, header)
       return res.data
     } catch(err) {
       if (err.response as ErrorResponse) {
@@ -54,24 +56,34 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
     }
   }
 
+  const uploadItem = async (item: PostItemRequest, file: File): Promise<void> => {
+    const response = await postItem(item, file)
+    if (response instanceof Error || 'status' in response) {
+      return
+    }
+    const newItems = items.concat({ id: response.id, name: response.name, expirationDate: response.expiresAt } as Item)
+    updateItems(newItems)
+  }
+
   const handleFileSelect = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     event.preventDefault();
     (fileSelector as HTMLInputElement).click()
     fileSelector?.addEventListener('change', () => {
       if (fileSelector?.files != undefined) {
+        // 複数ファイル同時アップロード バックエンド待ち
         /* for (let i = 0; i < fileSelector.files.length; i++) {
           console.log(fileSelector.files[i].name)
-          const reqest: PostItemReqest = {
+          const request: PostItemRequest = {
             name: fileSelector.files[i].name,
             duration: null
           }
-          postItem(reqest)
+          postItem(request)
         } */
-        const reqest: PostItemReqest = {
+        const request: PostItemRequest = {
           name: fileSelector.files[0].name,
           duration: null
         }
-        postItem(reqest, fileSelector.files[0])
+        uploadItem(request, fileSelector.files[0])
         setFileSelector(buildFileSelector()) //stateを初期化
       }
     }
