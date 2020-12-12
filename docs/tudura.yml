@@ -15,6 +15,11 @@ paths:
         ボックスを作成します。
       tags:
         - box
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref:  "#/components/schemas/PostBoxRequest"
       responses:
         "200":
           description: OK
@@ -47,7 +52,6 @@ paths:
         - item
       parameters:
         - $ref: '#/components/parameters/boxIdInPath'
-        - $ref: '#/components/parameters/itemIdInPath'
       requestBody:
         content:
           application/json:
