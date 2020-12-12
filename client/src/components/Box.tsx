@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 import { useParams, withRouter } from 'react-router-dom'
@@ -7,14 +7,21 @@ import PasswordInput from './PasswordInput'
 import Screen from '../style/Screen'
 import { ErrorResponse, GetBoxesResponse } from '../types/Response'
 
-interface BoxParams {
-  boxid: string
-}
-
 export interface Item {
   id: string
   name: string
   expirationDate: Date
+}
+
+export interface BoxProps {
+  items: Item[]
+  updateItems: (foo: Item[]) => void
+}
+
+const BoxContext = React.createContext({} as BoxProps)
+
+interface BoxParams {
+  boxid: string
 }
 
 const Box: React.FC = () => {
@@ -31,6 +38,10 @@ const Box: React.FC = () => {
 
   const authenticate = (): void => {
     setIsAuth(false)
+  }
+
+  const updateItems = (newItems: Item[]): void => {
+    setItems(newItems)
   }
 
   const setBoxInfo = async () => {
@@ -90,11 +101,13 @@ const Box: React.FC = () => {
             />
           )}
           {!isAuth && (
-            <BoxContents
-              boxid={boxid}
-              boxName={boxName}
-              items={items}
-            />
+            <BoxContext.Provider value={{items, updateItems}}>
+              <BoxContents
+                boxid={boxid}
+                boxName={boxName}
+                items={items}
+              />
+            </BoxContext.Provider>
           )}
         </>
       )}
@@ -113,5 +126,7 @@ const BoxBody = styled.div`
   }
   padding: 2rem 4rem;
 `
+
+export const useItems = (): BoxProps => (useContext(BoxContext))
 
 export default withRouter(Box)
