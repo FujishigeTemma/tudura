@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import axios, { AxiosError } from 'axios'
 import Modal from 'react-modal'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import Color from '../style/Color'
+import { ErrorResponse, PostBoxesAuthResponse } from '../types/Response'
 
 interface PasswordInputProps {
   boxid: string
@@ -10,34 +12,38 @@ interface PasswordInputProps {
   authenticate: VoidFunction
 }
 
-const modalStyle: Modal.Styles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    background: Color.BACKGROUND_PRIMARY,
-    borderRadius: '1rem'
-  },
-  overlay: {
-    background: 'rgba(0, 0, 0, 0.2)'
-  }
-}
 
 const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, isAuth, authenticate }: PasswordInputProps) => {
 
   const [value, setValue] = useState('')
 
-  const verifyPassword = (event: React.FormEvent): void => {
+  const verifyPassword = async (event: React.FormEvent): Promise<void> => {
     console.log(value)
-    authenticate()
     event.preventDefault()
+    const resAuth = await authBoxes(value)
+    if (resAuth instanceof Error || 'status' in resAuth || !resAuth.result) {
+      return
+    }
+    authenticate()
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setValue(event.target.value)
+  }
+  
+  const authBoxes = async (password: string): Promise<PostBoxesAuthResponse | ErrorResponse | Error> => {
+    try {
+      const res = await axios.post<PostBoxesAuthResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}/auth`, {password: password})
+      return res.data
+    } catch(err) {
+      if (err.response as AxiosError<ErrorResponse>) {
+        return err.response.data
+      }
+      if (err instanceof Error) {
+        return err
+      }
+      return new Error
+    }
   }
 
   return (
@@ -59,6 +65,22 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ boxid, isAuth, authentica
       </ModalForm>
     </Modal>
   )
+}
+
+const modalStyle: Modal.Styles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    background: Color.BACKGROUND_PRIMARY,
+    borderRadius: '1rem'
+  },
+  overlay: {
+    background: 'rgba(0, 0, 0, 0.2)'
+  }
 }
 
 const ModalForm = styled.form`
