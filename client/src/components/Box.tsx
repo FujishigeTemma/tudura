@@ -57,7 +57,9 @@ const Box: React.FC = () => {
     setIsBox(2)
     setIsAuth(false)
     setboxName(boxInfo.name)
-    setItems(boxInfo.items)
+    if (boxInfo.items !== null) {
+      setItems(boxInfo.items)
+    }
   }
 
   const getBoxes = async (): Promise<GetBoxesResponse | ErrorResponse | Error> => {
