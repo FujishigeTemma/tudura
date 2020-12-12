@@ -15,3 +15,7 @@ export interface ItemResponse {
   id: string
   name: string
 }
+
+export interface PostBoxesAuthResponse {
+  result: string
+}
