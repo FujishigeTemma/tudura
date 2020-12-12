@@ -1,10 +1,11 @@
 import React from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
-import SaveFile from './Savefile'//デバッグ用
+//import SaveFile from './Savefile'//デバッグ用
 import { Item } from './Box'
 import Color from '../style/Color'
 import { ErrorResponse, PostItemResponse } from '../types/Response'
+import { ReactComponent as FileIconSvg } from '../img/fileicon.svg'
 
 interface ItemProps {
   boxid: string
@@ -44,13 +45,13 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
     }
   }
 
-  const saveDownloadFile = () => {
-    SaveFile(new File(["Hello,World!"], "template.txt"))
-  }
+  const getURL = (): string => `https://asia-northeast1-tudura.cloudfunctions.net/DownloadItemHandler/boxes/${boxid}/d/${item.id}`
 
   return (
-    <CardDefault onClick={() => saveDownloadFile()}>
-      <Thumbnail></Thumbnail>
+    <CardDefault href={getURL()} download={item.name}>
+      <Thumbnail>
+        <FileIcon></FileIcon>
+      </Thumbnail>
       <CardName>
         <FileName>{item.name}</FileName>
       </CardName>
@@ -60,11 +61,20 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
 
 const Thumbnail = styled.div`
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   top: 0;
   left: 0;
   right: 0;
   bottom: 20%;
   border-bottom: 2px solid ${Color.PRIMARY_SUB};
+`
+
+const FileIcon = styled(FileIconSvg)`
+  width: 60%;
+  height: 60%;
+  opacity: 0.8;
 `
 
 const CardName = styled.div`
@@ -85,7 +95,7 @@ const FileName = styled.div`
   text-overflow: ellipsis;
 `
 
-const CardDefault = styled.button`
+const CardDefault = styled.a`
   border-radius: 5%;
   position: relative;
   border: solid 2px ${Color.PRIMARY_SUB};
