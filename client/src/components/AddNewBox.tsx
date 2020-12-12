@@ -19,6 +19,7 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
   const [isLocked, setIsLocked] = useState(false)
   const [boxPassword, setBoxPassword] = useState('')
   const [boxNameError, setBoxNameError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
 
   const postBoxes = async (): Promise<PostBoxesResponse | ErrorResponse | Error> => {
     try {
@@ -29,6 +30,7 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
       return res.data
     } catch (err) {
       if (err.response as ErrorResponse) {
+        setPasswordError(err.response.data)
         return err.response
       }
       if (err instanceof Error) {
@@ -43,6 +45,7 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
     setBoxName('')
     setBoxPassword('')
     setBoxNameError('')
+    setPasswordError('')
     setIsLocked(false)
     event.preventDefault()
   }
@@ -64,12 +67,15 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
       history.push(`/${boxInfo.id}`)
     }
   }
-  
+
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setBoxName(event.target.value)
   }
   const handleChangeLocked = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setIsLocked(event.target.checked)
+    if (event.target.checked === false) {
+      setBoxPassword('')
+    }
   }
   const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setBoxPassword(event.target.value)
@@ -105,8 +111,9 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
           placeholder='Enter password'
           disabled={!isLocked}
           onChange={handleChangePassword}
+          value={boxPassword}
         />
-        <NotSatisfied></NotSatisfied>
+        <NotSatisfied>{passwordError}</NotSatisfied>
         <Create type='submit'>create</Create>
         <Cancel type='button' onClick={closeModal}>cancel</Cancel>
       </ModalForm>
