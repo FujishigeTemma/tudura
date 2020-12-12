@@ -108,7 +108,10 @@ components:
                 format: uuid
               name:
                 type: string
-              expirationDate:
+              size:
+                type: integer
+                description: KB単位
+              expiresAt:
                 type: string
                 format: date-time
                 description: デフォルトは30分
@@ -130,8 +133,17 @@ components:
         id:
           type: string
           format: uuid
+        boxId:
+          type: string
+          format: uuid
         name:
           type: string
+        size:
+          type: integer
+          description: KB単位
+        expiresAt:
+          type: string
+          format: date-time
     PostItemRequest:
       type: object
       properties:
