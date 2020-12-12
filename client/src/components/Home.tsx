@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
 import { ReactComponent as IconSvg } from '../img/icon.svg'
 import Color from '../style/Color'
 
@@ -40,4 +41,4 @@ const Description = styled.h1`
   font-size: min(2rem, 7vw);
 `
 
-export default Home
+export default withRouter(Home)

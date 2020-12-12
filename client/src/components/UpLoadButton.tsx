@@ -45,7 +45,7 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
       }
       const res = await axios.post<PostItemResponse>(`${process.env.REACT_APP_API_SERVER}/PostItemHandler/boxes/${boxid}`, formData, header)
       return res.data
-    } catch(err) {
+    } catch (err) {
       if (err.response as ErrorResponse) {
         return err.response
       }

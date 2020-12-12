@@ -20,3 +20,10 @@ export interface PostItemResponse {
 export interface PostBoxesAuthResponse {
   result: string
 }
+
+export interface PostBoxesResponse {
+  id: string
+  name: string
+  items: Item[]
+  updatedAt: Date
+}
