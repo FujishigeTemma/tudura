@@ -98,6 +98,8 @@ func PostBoxHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var createdBox box
 	if err := dbPool.Get(&createdBox, "SELECT id, name, password_required = CASE WHEN hashed_pass IS NOT NULL THEN 1 ELSE 0 END, updated_at WHERE id = ?", id.String()); err != nil {
+		http.Error(w, "DB Error", http.StatusInternalServerError)
+		Error.Printf("error occured when SELECT created box record: %s", err)
 		return
 	}
 
