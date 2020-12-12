@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime"
 	"mime/multipart"
@@ -17,25 +18,10 @@ import (
 	"github.com/google/uuid"
 )
 
-type postItemRequest struct {
-	Name     string `json:"name" db:"name"`
-	Duration int    `json:"duration" db:"duration"`
-}
-
-type boxInfo struct {
-	HashedPass string `json:"hashedPass" db:"hashed_pass"`
-}
-
-type uploadedFile struct {
-	ID        string    `json:"id" db:"id"`
-	BoxID     string    `json:"boxId" db:"box_id"`
-	Name      string    `json:"name" db:"name"`
-	ExpiresAt time.Time `json:"expiresAt" db:"expires_at"`
-}
 
 // TODO: 一括アップロード可能に
-// PostItemHandler POST /boxes/{boxId} アイテムのアップロード
-func PostItemHandler(w http.ResponseWriter, r *http.Request) {
+// DownloadItemHandler POST /boxes/{boxId}/d/{itemId} アイテムのダウンロード
+func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 	clientOnce.Do(func() {
 		var err error
 		dbPool, err = getDBPool()
@@ -87,13 +73,6 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	//
 	//}
 
-	itemID, err := uuid.NewRandom()
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		Error.Printf("uuid.NewRandom: %v", err)
-		return
-	}
-
 	var req postItemRequest
 
 	mediaType, params, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
@@ -129,7 +108,7 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 			if p.FormName() == "file" {
-				if err := uploadFile(p, bucketName, itemID.String(), req.Duration); err != nil {
+				if err := uploadFile(p, bucketName, req.Name, req.Duration); err != nil {
 					http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 					Error.Printf("uploadFile(): %v", err)
 					return
@@ -139,6 +118,12 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// transactionを取る
+	itemID, err := uuid.NewRandom()
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		Error.Printf("uuid.NewRandom: %v", err)
+		return
+	}
 	var expirationDate time.Time
 	if req.Duration == 0 {
 		expirationDate = time.Now().Add(time.Minute * 30)
@@ -166,18 +151,22 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func uploadFile(r io.Reader, bucket, object string, duration int) error {
+// TODO: bucketをout of factorする
+func downloadFile(bucket, object string) (io.Writer, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*50)
 	defer cancel()
 
 	// TODO: gzip
 	// TODO: durationに応じてbucketを振り分ける(HotSpotになってよくなさそう)
-	wc := storageClient.Bucket(bucket).Object(object).NewWriter(ctx)
-	if _, err := io.Copy(wc, r); err != nil {
-		return fmt.Errorf("io.Copy: %v", err)
+	rc, err := storageClient.Bucket(bucket).Object(object).NewReader(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("Object(%q).NewReader: %v", object, err)
 	}
-	if err := wc.Close(); err != nil {
-		return fmt.Errorf("Writer.Close: %v", err)
+	defer rc.Close()
+
+	data, err := ioutil.ReadAll(rc)
+	if err != nil {
+		return nil, fmt.Errorf("ioutil.ReadAll: %v", err)
 	}
-	return nil
+	return data, nil
 }
