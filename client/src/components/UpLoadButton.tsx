@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
@@ -30,13 +30,22 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
     setFileSelector(buildFileSelector())
   }, [])
 
-  const postItem = async (item: PostItemReqest): Promise<ItemResponse | ErrorResponse | Error> => {
+  const postItem = async (item: PostItemReqest, file: File): Promise<ItemResponse | ErrorResponse | Error> => {
     try {
-      const res = await axios.post<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/boxes/${boxid}`, item)
+      const formData = new FormData()
+      formData.append('json', JSON.stringify(item))
+      formData.append('file', file)
+      const header = {
+        'headers': {
+          'content-type': 'multipart/form-data'
+        }
+      }
+      const res = await axios.post<ItemResponse>(`${process.env.REACT_APP_API_SERVER}/PostItemHandler/boxes/${boxid}`, formData, header)
+      console.log(res.data)
       return res.data
     } catch(err) {
-      if (err.response as AxiosError<ErrorResponse>) {
-        return err.response.data
+      if (err.response as ErrorResponse) {
+        return err.response
       }
       if (err instanceof Error) {
         return err
@@ -50,14 +59,19 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
     (fileSelector as HTMLInputElement).click()
     fileSelector?.addEventListener('change', () => {
       if (fileSelector?.files != undefined) {
-        for (let i = 0; i < fileSelector.files.length; i++) {
+        /* for (let i = 0; i < fileSelector.files.length; i++) {
           console.log(fileSelector.files[i].name)
           const reqest: PostItemReqest = {
             name: fileSelector.files[i].name,
             duration: null
           }
           postItem(reqest)
+        } */
+        const reqest: PostItemReqest = {
+          name: fileSelector.files[0].name,
+          duration: null
         }
+        postItem(reqest, fileSelector.files[0])
         setFileSelector(buildFileSelector()) //stateを初期化
       }
     }

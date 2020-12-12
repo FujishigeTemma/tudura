@@ -12,22 +12,7 @@ interface BoxContentsProps {
   items: Item[]
 }
 
-interface CardContent {
-  itemid: string
-  key: string
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const BoxContents: React.FC<BoxContentsProps> = ({ boxid, boxName, items }: BoxContentsProps) => {
-
-  const renderCard = (): CardContent[] => {
-    const res: CardContent[] = []
-    for (let i = 0; i < items.length; i++) {
-      res.push({ itemid: items[i].id, key: '${i}' })
-    }
-    return res
-  }
-
   return (
     <>
       <BoxName>{boxName}</BoxName>
@@ -37,15 +22,14 @@ const BoxContents: React.FC<BoxContentsProps> = ({ boxid, boxName, items }: BoxC
         <BoxInfoContents>14/200 GB</BoxInfoContents>
       </BoxInfo>
       <BoxGrid>
-        {renderCard().map((c: CardContent) => (
-          <Card key={c.key} boxid={boxid} itemid={c.itemid} />
+        {items.map((item: Item) => (
+          <Card key={item.id} boxid={boxid} item={item} />
         ))}
       </BoxGrid>
       <UpLoadButton boxid={boxid}></UpLoadButton>
     </>
   )
 }
-
 
 const BoxName = styled.div`
   text-align: center;
@@ -84,7 +68,7 @@ const BoxGrid = styled.div`
   margin: 0 auto;
   grid-template-columns: repeat(auto-fit, minmax(200px, auto));
   grid-gap: 20px;
-  justify-content: center;
+  justify-content: start;
   align-content: top;
   ${Screen.WINDOW} {
     max-width: max(1000px, 60%);
