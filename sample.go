@@ -1,4 +1,4 @@
-package sample
+package function
 
 import "net/http"
 
