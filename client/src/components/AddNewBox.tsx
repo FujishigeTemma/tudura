@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useHistory, withRouter, RouteComponentProps } from 'react-router-dom'
 import Modal from 'react-modal'
 import styled from 'styled-components'
@@ -15,7 +15,9 @@ interface BoxProps extends RouteComponentProps {
 }
 
 const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
+
   const history = useHistory()
+  const tid = useRef<React.ReactText | null>(null)
   const [boxName, setBoxName] = useState('')
   const [isLocked, setIsLocked] = useState(false)
   const [boxPassword, setBoxPassword] = useState('')
@@ -57,12 +59,14 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
       event.preventDefault()
     }
     else {
+      tid.current = toast(`Create '${boxName}' ...`, { autoClose: false })
       const boxInfo = await postBoxes()
       if (boxInfo instanceof Error || 'status' in boxInfo) {
-        toast.warn(`Failed add '${boxName}'`)
+        toast.update(tid.current, { render: `Failed add '${boxName}'`, type: toast.TYPE.WARNING, autoClose: 5000 })
         return
       }
       toast.info(`Create Box '${boxName}'`)
+      toast.update(tid.current, { render: `Sccuess create '${boxName}'`, type: toast.TYPE.INFO, autoClose: 5000 })
       closeModal(event)
       history.push(`/${boxInfo.id}`)
     }
