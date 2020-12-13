@@ -2,9 +2,12 @@ import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 import { useParams, withRouter } from 'react-router-dom'
+import { ToastContainer, Slide } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css'
 import BoxContents from './BoxContents'
 import PasswordInput from './PasswordInput'
 import Screen from '../style/Screen'
+import Color from '../style/Color'
 import { ErrorResponse, GetBoxesResponse } from '../types/Response'
 
 export interface Item {
@@ -111,9 +114,38 @@ const Box: React.FC = () => {
           )}
         </>
       )}
+      <StyledToastContainer 
+        position="bottom-left"
+        autoClose={5000}
+        transition={Slide}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        closeButton={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </BoxBody>
   )
 }
+
+const StyledToastContainer = styled(ToastContainer).attrs({
+  className: 'toast-container',
+  toastClassName: 'toast'
+})`
+  width: min(60vw, 320px);
+  .Toastify__toast {
+    &--info {
+        background: ${Color.INFO};
+    }
+    &--warning {
+        background: ${Color.WARNING};
+    }
+  }
+  
+`
 
 const NotFound = styled.div`
   text-align: center;

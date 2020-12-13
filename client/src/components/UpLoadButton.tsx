@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
+import { toast } from 'react-toastify'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
 import { useItems, Item } from './Box'
@@ -27,6 +28,7 @@ const buildFileSelector = (): HTMLInputElement => {
 const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
 
   const { items, updateItems } = useItems()
+  const tid = useRef<React.ReactText | null>(null)
   const [fileSelector, setFileSelector] = useState<HTMLInputElement>()
 
   useEffect(() => {
@@ -57,12 +59,15 @@ const UpLoadButton: React.FC<UploadProps> = ({ boxid }: UploadProps) => {
   }
 
   const uploadItem = async (item: PostItemRequest, file: File): Promise<void> => {
+    tid.current = toast(`upload... ${item.name}`, { autoClose: false })
     const response = await postItem(item, file)
     if (response instanceof Error || 'status' in response) {
+      toast.update(tid.current, { render: "Failed...", type: toast.TYPE.WARNING, autoClose: 5000 })
       return
     }
     const newItems = items.concat({ id: response.id, name: response.name, expirationDate: response.expiresAt } as Item)
     updateItems(newItems)
+    toast.update(tid.current, { render: "Sccuess!!", type: toast.TYPE.INFO, autoClose: 5000 })
   }
 
   const handleFileSelect = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
