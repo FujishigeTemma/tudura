@@ -68,7 +68,6 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
         toast.update(tid.current, { render: `${boxInfo.data}`, type: toast.TYPE.WARNING, autoClose: 5000 })
         return
       }
-      toast.info(`Create Box '${boxName}'`)
       toast.update(tid.current, { render: `Sccuess create '${boxName}'`, type: toast.TYPE.INFO, autoClose: 5000 })
       closeModal(event)
       history.push(`/${boxInfo.id}`)
