@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { Item } from './Box'
 import Color from '../style/Color'
 import { ErrorResponse, PostItemResponse } from '../types/Response'
-import { ReactComponent as FileIconSvg } from '../img/fileicon.svg'
+import * as SvgIcons from '../img/SvgIcons'
 
 interface ItemProps {
   boxid: string
@@ -18,7 +18,7 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
     try {
       const res = await axios.get<Item>(`${process.env.REACT_APP_API_SERVER}/GetItemHandler/boxes/${boxid}/${item.id}`)
       return res.data
-    } catch(err) {
+    } catch (err) {
       if (err.response as ErrorResponse) {
         return err.response
       }
@@ -34,7 +34,7 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
     try {
       const res = await axios.delete<PostItemResponse>(`${process.env.REACT_APP_API_SERVER_D}/boxes/${boxid}/${item.id}`)
       return res.data
-    } catch(err) {
+    } catch (err) {
       if (err.response as ErrorResponse) {
         return err.response
       }
@@ -71,7 +71,7 @@ const Thumbnail = styled.div`
   border-bottom: 2px solid ${Color.PRIMARY_SUB};
 `
 
-const FileIcon = styled(FileIconSvg)`
+const FileIcon = styled(SvgIcons.DOC)`
   width: 60%;
   height: 60%;
   opacity: 0.8;
