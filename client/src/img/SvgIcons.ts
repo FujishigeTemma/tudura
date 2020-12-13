@@ -10,8 +10,3 @@ export { ReactComponent as JSON } from './fileicons/json.svg'
 export { ReactComponent as MD } from './fileicons/md.svg'
 export { ReactComponent as PDF } from './fileicons/pdf.svg'
 export { ReactComponent as TXT } from './fileicons/txt.svg'
-
-
-
-
-
