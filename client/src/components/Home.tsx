@@ -2,13 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { ReactComponent as IconSvg } from '../img/icon.svg'
+import { ReactComponent as LogoSvg } from '../img/tuduralogo.svg'
 import Color from '../style/Color'
 
 const Home: React.FC = () => {
   return (
     <HomeBody>
-      <Icon></Icon>
-      <HomeText>tudura</HomeText>
+      <Icona>
+        <Icon></Icon>
+        <HomeText>tudura</HomeText>
+      </Icona>
       <Description>tuduraは異なるデバイス間でのファイル共有が簡単にできるサービスです。</Description>
     </HomeBody>
   )
@@ -19,10 +22,16 @@ const HomeBody = styled.div`
   padding: 5rem 1rem;
 `
 
-const HomeText = styled.div`
-  font-family: 'Cabin Condensed', sans-serif;
-  font-size: 5rem;
-  margin: 0 0 5rem;
+const HomeText = styled(LogoSvg)`
+  height:5rem;
+  margin: 1rem 0 5rem;
+`
+
+const Icona = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `
 
 const Icon = styled(IconSvg)`
