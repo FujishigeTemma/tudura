@@ -70,7 +70,6 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
         toast.warn(`${boxInfo.data}`)
         return
       }
-      console.log('a')
       closeModal(event)
       //toast.update(tid.current, { render: `Sccuess create '${boxName}'`, type: toast.TYPE.INFO, autoClose: 5000 })
       toast.info(`Sccuess create '${boxName}'`)
