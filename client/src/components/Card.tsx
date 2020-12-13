@@ -114,6 +114,7 @@ const FileIcon = styled.div`
 `
 
 const CardName = styled.div`
+  font-family: 'Google Sans';
   position: absolute;
   display: flex;
   justify-content: center;

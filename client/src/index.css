@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Cabin+Condensed&display=swap');
-
+@font-face{
+  font-family: 'Google Sans';
+  src: url('./fonts/google-sans-cufonfonts/ProductSans-Regular.ttf') format(ttf);
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
