@@ -78,6 +78,8 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
         return <SvgIcons.PDF />
       case 'txt':
         return <SvgIcons.TXT />
+      case 'zip':
+        return <SvgIcons.ZIP />
       default:
         return <SvgIcons.BLANK />
     }
