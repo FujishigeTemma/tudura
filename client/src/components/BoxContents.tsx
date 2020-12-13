@@ -49,6 +49,7 @@ const BoxInfo = styled.div`
   ${Screen.MOBILE} {
     display: none;
   }
+  display: none;
 `
 
 const BoxInfoContents = styled.div`
