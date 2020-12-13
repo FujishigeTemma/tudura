@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { useHistory, withRouter, RouteComponentProps } from 'react-router-dom'
 import Modal from 'react-modal'
 import styled from 'styled-components'
@@ -17,7 +17,7 @@ interface BoxProps extends RouteComponentProps {
 const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
 
   const history = useHistory()
-  const tid = useRef<React.ReactText | null>(null)
+  //const tid = useRef<React.ReactText | null>(null)
   const [boxName, setBoxName] = useState('')
   const [isLocked, setIsLocked] = useState(false)
   const [boxPassword, setBoxPassword] = useState('')
@@ -58,18 +58,22 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
       event.preventDefault()
     }
     else {
-      tid.current = toast(`Create '${boxName}' ...`, { autoClose: false })
+      //tid.current = toast(`Create '${boxName}' ...`, { autoClose: false })
       const boxInfo = await postBoxes()
       if (boxInfo instanceof Error) {
-        toast.update(tid.current, { render: `${boxInfo}`, type: toast.TYPE.WARNING, autoClose: 5000 })
+        //toast.update(tid.current, { render: `${boxInfo}`, type: toast.TYPE.WARNING, autoClose: 5000 })
+        toast.warn(`${boxInfo}`)
         return
       }
       if ('status' in boxInfo) {
-        toast.update(tid.current, { render: `${boxInfo.data}`, type: toast.TYPE.WARNING, autoClose: 5000 })
+        //toast.update(tid.current, { render: `${boxInfo.data}`, type: toast.TYPE.WARNING, autoClose: 5000 })
+        toast.warn(`${boxInfo.data}`)
         return
       }
-      toast.update(tid.current, { render: `Sccuess create '${boxName}'`, type: toast.TYPE.INFO, autoClose: 5000 })
+      console.log('a')
       closeModal(event)
+      //toast.update(tid.current, { render: `Sccuess create '${boxName}'`, type: toast.TYPE.INFO, autoClose: 5000 })
+      toast.info(`Sccuess create '${boxName}'`)
       history.push(`/${boxInfo.id}`)
     }
   }
