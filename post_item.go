@@ -23,7 +23,7 @@ type postItemRequest struct {
 }
 
 type boxInfo struct {
-	HashedPass string `json:"hashedPass" db:"hashed_pass"`
+	HashedPass sql.NullString `json:"hashedPass" db:"hashed_pass"`
 }
 
 type uploadedFile struct {
@@ -83,7 +83,7 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: Boxのauth時にcookieを付与→cookieがない場合はBoxのauthにリダイレクト
-	//if len(boxInfo.HashedPass) != 0 {
+	//if boxInfo.HashedPass.Valid() {
 	//
 	//}
 
