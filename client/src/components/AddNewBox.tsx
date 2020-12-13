@@ -33,7 +33,6 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
       return res.data
     } catch (err) {
       if (err.response as ErrorResponse) {
-        setPasswordError(err.response.data)
         return err.response
       }
       if (err instanceof Error) {
@@ -61,8 +60,12 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
     else {
       tid.current = toast(`Create '${boxName}' ...`, { autoClose: false })
       const boxInfo = await postBoxes()
-      if (boxInfo instanceof Error || 'status' in boxInfo) {
-        toast.update(tid.current, { render: `Failed add '${boxName}'`, type: toast.TYPE.WARNING, autoClose: 5000 })
+      if (boxInfo instanceof Error) {
+        toast.update(tid.current, { render: `${boxInfo}`, type: toast.TYPE.WARNING, autoClose: 5000 })
+        return
+      }
+      if ('status' in boxInfo) {
+        toast.update(tid.current, { render: `${boxInfo.data}`, type: toast.TYPE.WARNING, autoClose: 5000 })
         return
       }
       toast.info(`Create Box '${boxName}'`)
@@ -131,7 +134,6 @@ const ModalStyle: Modal.Styles = {
     left: '50%',
     right: 'auto',
     bottom: 'auto',
-    marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
     background: Color.BACKGROUND_PRIMARY,
     borderRadius: '1rem'
