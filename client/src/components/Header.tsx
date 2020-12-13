@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
 import { ReactComponent as IconSvg } from '../img/icon.svg'
+import { ReactComponent as LogoSvg } from '../img/tuduralogo.svg'
 import AddNewBox from './AddNewBox'
 
 const Header: React.FC = () => {
@@ -19,7 +20,7 @@ const Header: React.FC = () => {
     <HeaderBack>
       <HeaderMain href='/'>
         <LogoIcon></LogoIcon>
-        <LogoText>tudura</LogoText>
+        <LogoText></LogoText>
       </HeaderMain>
       <AddNewButton onClick={openModal}>
         Add New
@@ -68,9 +69,8 @@ const LogoIcon = styled(IconSvg)`
   }
 `
 
-const LogoText = styled.div`
-  font-size: 3rem;
-  font-family: 'Cabin Condensed', sans-serif;
+const LogoText = styled(LogoSvg)`
+  height: 2.3rem;
   ${Screen.MOBILE} {
     //color: ${Color.TEXT_SECONDARY};
     font-size: 2.5rem;
