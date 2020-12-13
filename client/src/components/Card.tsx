@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { Item } from './Box'
 import Color from '../style/Color'
 import { ErrorResponse, PostItemResponse } from '../types/Response'
-import { ReactComponent as FileIconSvg } from '../img/fileicon.svg'
+import * as SvgIcons from '../img/SvgIcons'
 
 interface ItemProps {
   boxid: string
@@ -18,7 +18,7 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
     try {
       const res = await axios.get<Item>(`${process.env.REACT_APP_API_SERVER}/GetItemHandler/boxes/${boxid}/${item.id}`)
       return res.data
-    } catch(err) {
+    } catch (err) {
       if (err.response as ErrorResponse) {
         return err.response
       }
@@ -34,7 +34,7 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
     try {
       const res = await axios.delete<PostItemResponse>(`${process.env.REACT_APP_API_SERVER_D}/boxes/${boxid}/${item.id}`)
       return res.data
-    } catch(err) {
+    } catch (err) {
       if (err.response as ErrorResponse) {
         return err.response
       }
@@ -46,11 +46,47 @@ const Card: React.FC<ItemProps> = ({ boxid, item }: ItemProps) => {
   }
 
   const getURL = (): string => `https://asia-northeast1-tudura.cloudfunctions.net/DownloadItemHandler/boxes/${boxid}/d/${item.id}`
-
+  const IconImage = (): JSX.Element => {
+    const fileType = item.name.split('.')
+    switch (fileType[fileType.length - 1].toLowerCase()) {
+      case 'css':
+        return <SvgIcons.CSS />
+      case 'doc':
+        return <SvgIcons.DOC />
+      case 'docx':
+        return <SvgIcons.DOC />
+      case 'gif':
+        return <SvgIcons.GIF />
+      case 'html':
+        return <SvgIcons.HTML />
+      case 'png':
+        return <SvgIcons.IMAGE />
+      case 'jpeg':
+        return <SvgIcons.IMAGE />
+      case 'jpg':
+        return <SvgIcons.IMAGE />
+      case 'svg':
+        return <SvgIcons.IMAGE />
+      case 'eps':
+        return <SvgIcons.IMAGE />
+      case 'js':
+        return <SvgIcons.JS />
+      case 'json':
+        return <SvgIcons.JSON />
+      case 'md':
+        return <SvgIcons.MD />
+      case 'pdf':
+        return <SvgIcons.PDF />
+      case 'txt':
+        return <SvgIcons.TXT />
+      default:
+        return <SvgIcons.BLANK />
+    }
+  }
   return (
     <CardDefault href={getURL()} download={item.name}>
       <Thumbnail>
-        <FileIcon></FileIcon>
+        <FileIcon>{IconImage()}</FileIcon>
       </Thumbnail>
       <CardName>
         <FileName>{item.name}</FileName>
@@ -71,9 +107,9 @@ const Thumbnail = styled.div`
   border-bottom: 2px solid ${Color.PRIMARY_SUB};
 `
 
-const FileIcon = styled(FileIconSvg)`
-  width: 60%;
-  height: 60%;
+const FileIcon = styled.div`
+  transform: scale(5);
+  margin: 1.5em 0 0 0;
   opacity: 0.8;
 `
 
