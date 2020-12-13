@@ -9,4 +9,5 @@ export default {
   TEXT_SECONDARY: '#FDFDFD',
   WARNING: '#F20519',
   INFO: '#2A6D6D',
+  CANCEL: '#999'
 }

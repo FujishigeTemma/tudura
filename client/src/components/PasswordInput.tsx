@@ -134,7 +134,7 @@ const Cancel = styled.button`
   width: 40%;
   margin: 2em 0 0;
   padding: 0.4em 0.7em;
-  background-color: ${Color.PRIMARY};
+  background-color: ${Color.CANCEL};
   color: ${Color.BACKGROUND_PRIMARY};
   outline: none;
   border-style: none;
