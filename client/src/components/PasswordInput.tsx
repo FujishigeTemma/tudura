@@ -74,7 +74,6 @@ const modalStyle: Modal.Styles = {
     left: '50%',
     right: 'auto',
     bottom: 'auto',
-    marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
     background: Color.BACKGROUND_PRIMARY,
     borderRadius: '1rem'

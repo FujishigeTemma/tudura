@@ -9,7 +9,7 @@ const Home: React.FC = () => {
     <HomeBody>
       <Icon></Icon>
       <HomeText>tudura</HomeText>
-      <Description>tudura は異なるデバイス間でのファイル共有が簡単にできるサービスです。</Description>
+      <Description>tuduraは異なるデバイス間でのファイル共有が簡単にできるサービスです。</Description>
     </HomeBody>
   )
 }
@@ -37,8 +37,9 @@ const Icon = styled(IconSvg)`
   }
 `
 
-const Description = styled.h1`
-  font-size: min(2rem, 7vw);
+const Description = styled.div`
+font-family: 'M PLUS Rounded 1c';
+  font-size: min(2.4rem, 7vw);
 `
 
 export default withRouter(Home)
