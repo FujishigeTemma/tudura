@@ -33,6 +33,18 @@ func PostBoxHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	})
 
+	// Set CORS headers for the preflight request
+	if r.Method == http.MethodOptions {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Max-Age", "3600")
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	// Set CORS headers for the main request.
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	var req postBoxRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
@@ -84,6 +96,7 @@ func PostBoxHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(res)
+		return
 	}
 
 	id, err := uuid.NewRandom()
@@ -95,9 +108,12 @@ func PostBoxHandler(w http.ResponseWriter, r *http.Request) {
 	if _, err := dbPool.Exec("INSERT INTO boxes(`id`, `name`) VALUES (?, ?)", id.String(), req.Name); err != nil {
 		http.Error(w, "DB Error", http.StatusInternalServerError)
 		Error.Printf("error occured when INSERT box record: %s", err)
+		return
 	}
 	var createdBox box
-	if err := dbPool.Get(&createdBox, "SELECT id, name, password_required = CASE WHEN hashed_pass IS NOT NULL THEN 1 ELSE 0 END, updated_at WHERE id = ?", id.String()); err != nil {
+	if err := dbPool.Get(&createdBox, "SELECT id, name, CASE WHEN hashed_pass IS NOT NULL THEN 1 ELSE 0 END AS password_required, updated_at FROM boxes WHERE id = ?", id.String()); err != nil {
+		http.Error(w, "DB Error", http.StatusInternalServerError)
+		Error.Printf("error occured when SELECT created box record: %s", err)
 		return
 	}
 

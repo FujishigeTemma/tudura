@@ -23,7 +23,7 @@ type postItemRequest struct {
 }
 
 type boxInfo struct {
-	HashedPass string `json:"hashedPass" db:"hashed_pass"`
+	HashedPass sql.NullString `json:"hashedPass" db:"hashed_pass"`
 }
 
 type uploadedFile struct {
@@ -45,6 +45,18 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	})
+
+	// Set CORS headers for the preflight request
+	if r.Method == http.MethodOptions {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Max-Age", "3600")
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	// Set CORS headers for the main request.
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	var err error
 	// TODO: コネクションの効率化
@@ -71,9 +83,16 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: Boxのauth時にcookieを付与→cookieがない場合はBoxのauthにリダイレクト
-	//if len(boxInfo.HashedPass) != 0 {
+	//if boxInfo.HashedPass.Valid() {
 	//
 	//}
+
+	itemID, err := uuid.NewRandom()
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		Error.Printf("uuid.NewRandom: %v", err)
+		return
+	}
 
 	var req postItemRequest
 
@@ -103,14 +122,14 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				if len(req.Name) <= 0 || len(req.Name) > 32 {
+				if len([]rune(req.Name)) <= 0 || len([]rune(req.Name)) > 32 {
 					http.Error(w, "Item Name must be between 1 and 32 characters.", http.StatusBadRequest)
 					Info.Printf("item name length error: %v", req.Name)
 					return
 				}
 			}
 			if p.FormName() == "file" {
-				if err := uploadFile(p, bucketName, req.Name, req.Duration); err != nil {
+				if err := uploadFile(p, bucketName, itemID.String(), req.Duration); err != nil {
 					http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 					Error.Printf("uploadFile(): %v", err)
 					return
@@ -120,12 +139,6 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// transactionを取る
-	itemID, err := uuid.NewRandom()
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		Error.Printf("uuid.NewRandom: %v", err)
-		return
-	}
 	var expirationDate time.Time
 	if req.Duration == 0 {
 		expirationDate = time.Now().Add(time.Minute * 30)
@@ -157,6 +170,7 @@ func uploadFile(r io.Reader, bucket, object string, duration int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*50)
 	defer cancel()
 
+	// TODO: gzip
 	// TODO: durationに応じてbucketを振り分ける(HotSpotになってよくなさそう)
 	wc := storageClient.Bucket(bucket).Object(object).NewWriter(ctx)
 	if _, err := io.Copy(wc, r); err != nil {
