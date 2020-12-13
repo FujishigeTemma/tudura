@@ -122,7 +122,7 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				if len(req.Name) <= 0 || len(req.Name) > 32 {
+				if len([]rune(req.Name)) <= 0 || len([]rune(req.Name)) > 32 {
 					http.Error(w, "Item Name must be between 1 and 32 characters.", http.StatusBadRequest)
 					Info.Printf("item name length error: %v", req.Name)
 					return
