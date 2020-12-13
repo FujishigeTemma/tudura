@@ -3,6 +3,7 @@ import { useHistory, withRouter, RouteComponentProps } from 'react-router-dom'
 import Modal from 'react-modal'
 import styled from 'styled-components'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 import Color from '../style/Color'
 import Screen from '../style/Screen'
 import { PostBoxesResponse, ErrorResponse } from '../types/Response'
@@ -51,18 +52,17 @@ const AddNewBox: React.FC<BoxProps> = ({ isOpen, close }: BoxProps) => {
   }
   const createBox = async (event: React.FormEvent) => {
     event.preventDefault()
-    console.log(boxName)
     if (boxName === '') {
       setBoxNameError('Empty name is not allowed!')
       event.preventDefault()
     }
     else {
       const boxInfo = await postBoxes()
-      console.log(boxInfo)
       if (boxInfo instanceof Error || 'status' in boxInfo) {
-        //TODO:いい感じに通知を出す
+        toast.warn(`Failed add '${boxName}'`)
         return
       }
+      toast.info(`Create Box '${boxName}'`)
       closeModal(event)
       history.push(`/${boxInfo.id}`)
     }
@@ -237,7 +237,7 @@ const Cancel = styled.button`
   width: 40%;
   margin: 2em 0 0;
   padding: 0.4em 0.7em;
-  background-color: ${Color.PRIMARY};
+  background-color: ${Color.CANCEL};
   color: ${Color.BACKGROUND_PRIMARY};
   outline: none;
   border-style: none;

@@ -79,9 +79,9 @@ const LogoText = styled.div`
 `
 
 const AddNewButton = styled.button`
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   margin: 0 max(calc(50% - 620px), 5%);
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   background-color: ${Color.PRIMARY};
   color: ${Color.BACKGROUND_PRIMARY};
   outline: none;
