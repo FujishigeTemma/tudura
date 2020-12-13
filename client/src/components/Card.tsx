@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
-//import SaveFile from './Savefile'//デバッグ用
 import { Item } from './Box'
 import Color from '../style/Color'
 import { ErrorResponse, PostItemResponse } from '../types/Response'
