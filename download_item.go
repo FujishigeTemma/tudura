@@ -13,7 +13,8 @@ import (
 )
 
 type itemInfo struct {
-	IsExpired bool `db:"is_expired"`
+	Name      string `json:"name" db:"name"`
+	IsExpired bool   `db:"is_expired"`
 }
 
 // TODO: 一括アップロード可能に
@@ -58,7 +59,7 @@ func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 	itemID := r.URL.Path[46:]
 
 	var itemInfo itemInfo
-	err = dbPool.Get(&itemInfo, "SELECT CASE WHEN expires_at <= ? THEN 1 ELSE 0 END AS is_expired FROM items WHERE id = ?", time.Now(), itemID)
+	err = dbPool.Get(&itemInfo, "SELECT name, CASE WHEN expires_at <= ? THEN 1 ELSE 0 END AS is_expired FROM items WHERE id = ?", time.Now(), itemID)
 	if err == sql.ErrNoRows {
 		http.Error(w, "Item Not Found", http.StatusNotFound)
 		Info.Printf("item not found: %v", itemID)
@@ -82,8 +83,8 @@ func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename= %s", itemInfo.Name))
 	w.Header().Set("Content-Length", string(len(file)))
-	w.Header().Set("Content-Disposition", "attachment")
 	w.Write(file)
 }
 
