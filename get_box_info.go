@@ -55,8 +55,7 @@ func GetBoxHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TDOD: dataSize
-	if err := dbPool.Select(&boxInfo.Items, "SELECT id, name, expires_at FROM items WHERE box_id = ? AND expires_at > ?", boxID, time.Now()); err != nil {
+	if err := dbPool.Select(&boxInfo.Items, "SELECT id, name, size, expires_at FROM items WHERE box_id = ? AND expires_at > ?", boxID, time.Now()); err != nil {
 		http.Error(w, "DB Error", http.StatusInternalServerError)
 		Error.Printf("error occured when SELECT item records: %s", err)
 		return

@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -76,7 +76,7 @@ func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file, err := downloadFile(bucketName, itemID)
+	file, err := getDownloadStream(bucketName, itemID)
 	if err != nil {
 		http.Error(w, "Resource Error", http.StatusInternalServerError)
 		Error.Printf("downloadFile(): %v", err)
@@ -84,27 +84,20 @@ func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename= %s", itemInfo.Name))
-	w.Header().Set("Content-Length", string(len(file)))
-	w.Write(file)
+	w.Header().Set("Content-Length", string(file.Attrs.Size))
+	if _, err := io.Copy(w, file); err != nil {
+		http.Error(w, "I/O Error", http.StatusInternalServerError)
+		Error.Printf("io.Copy(): %v", err)
+		return
+	}
 }
 
 // TODO: bucketをout of factorする
-func downloadFile(bucket, object string) ([]byte, error) {
+func getDownloadStream(bucket, object string) (*storage.Reader, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*50)
 	defer cancel()
 
 	// TODO: gzip
 	// TODO: durationに応じてbucketを振り分ける(HotSpotになってよくなさそう)
-	rc, err := storageClient.Bucket(bucket).Object(object).NewReader(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("Object(%q).NewReader: %v", object, err)
-	}
-	defer rc.Close()
-
-	// TODO: streamにしたい
-	data, err := ioutil.ReadAll(rc)
-	if err != nil {
-		return nil, fmt.Errorf("ioutil.ReadAll: %v", err)
-	}
-	return data, nil
+	return storageClient.Bucket(bucket).Object(object).NewReader(ctx)
 }

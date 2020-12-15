@@ -40,9 +40,8 @@ func GetItemHandler(w http.ResponseWriter, r *http.Request) {
 
 	itemID := r.URL.Path[44:]
 
-	// TDOD: dataSize
 	var itemInfo item
-	err := dbPool.Get(&itemInfo, "SELECT id, name, expires_at FROM items WHERE id = ?", itemID)
+	err := dbPool.Get(&itemInfo, "SELECT id, name, size, expires_at FROM items WHERE id = ?", itemID)
 	if err == sql.ErrNoRows {
 		http.Error(w, "Item Not Found", http.StatusNotFound)
 		Info.Printf("item not found: %v", itemID)

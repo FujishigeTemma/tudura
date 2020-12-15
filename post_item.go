@@ -30,6 +30,7 @@ type uploadedFile struct {
 	ID        string    `json:"id" db:"id"`
 	BoxID     string    `json:"boxId" db:"box_id"`
 	Name      string    `json:"name" db:"name"`
+	Size      int64     `json:"size" db:"size"`
 	ExpiresAt time.Time `json:"expiresAt" db:"expires_at"`
 }
 
@@ -95,6 +96,7 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req postItemRequest
+	var fileInfo *storage.ObjectAttrs
 
 	mediaType, params, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
 	if err != nil {
@@ -129,7 +131,8 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 			if p.FormName() == "file" {
-				if err := uploadFile(p, bucketName, itemID.String(), req.Duration); err != nil {
+				fileInfo, err = uploadFile(p, bucketName, itemID.String(), req.Duration)
+				if err != nil {
 					http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 					Error.Printf("uploadFile(): %v", err)
 					return
@@ -145,12 +148,12 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		expirationDate = time.Now().Add(time.Minute * time.Duration(req.Duration))
 	}
-	if _, err := dbPool.Exec("INSERT INTO items(`id`, `box_id`, `name`, `expires_at`) VALUES (?, ?, ?, ?)", itemID.String(), boxID, req.Name, expirationDate); err != nil {
+	if _, err := dbPool.Exec("INSERT INTO items(`id`, `box_id`, `name`, `size`, `expires_at`) VALUES (?, ?, ?, ?)", itemID.String(), boxID, req.Name, fileInfo.Size, expirationDate); err != nil {
 		http.Error(w, "DB Error", http.StatusInternalServerError)
 		Error.Printf("error occured when INSERT item record: %v", err)
 	}
 	var uploadedFile uploadedFile
-	if err := dbPool.Get(&uploadedFile, "SELECT id, box_id, name, expires_at FROM items WHERE id = ?", itemID.String()); err != nil {
+	if err := dbPool.Get(&uploadedFile, "SELECT id, box_id, name, size, expires_at FROM items WHERE id = ?", itemID.String()); err != nil {
 		http.Error(w, "DB Error", http.StatusInternalServerError)
 		Error.Printf("error occured when SELECT uploaded item record: %v", err)
 		return
@@ -166,7 +169,7 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func uploadFile(r io.Reader, bucket, object string, duration int) error {
+func uploadFile(r io.Reader, bucket, object string, duration int) (*storage.ObjectAttrs, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*50)
 	defer cancel()
 
@@ -174,10 +177,10 @@ func uploadFile(r io.Reader, bucket, object string, duration int) error {
 	// TODO: durationに応じてbucketを振り分ける(HotSpotになってよくなさそう)
 	wc := storageClient.Bucket(bucket).Object(object).NewWriter(ctx)
 	if _, err := io.Copy(wc, r); err != nil {
-		return fmt.Errorf("io.Copy: %v", err)
+		return nil, fmt.Errorf("io.Copy: %v", err)
 	}
 	if err := wc.Close(); err != nil {
-		return fmt.Errorf("Writer.Close: %v", err)
+		return nil, fmt.Errorf("Writer.Close: %v", err)
 	}
-	return nil
+	return &wc.ObjectAttrs, nil
 }
