@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"mime"
 	"mime/multipart"
 	"net/http"
@@ -38,11 +37,8 @@ type uploadedFile struct {
 // PostItemHandler POST /boxes/{boxId} アイテムのアップロード
 func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	clientOnce.Do(func() {
-		var err error
-		dbPool, err = getDBPool()
-		if err != nil {
-			http.Error(w, "Error initializing database", http.StatusInternalServerError)
-			Error.Printf("getDBPool(): %v", err)
+		if err := setup(); err != nil {
+			http.Error(w, "Error initializing context", http.StatusInternalServerError)
 			return
 		}
 	})
@@ -59,19 +55,10 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	// Set CORS headers for the main request.
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	var err error
-	// TODO: コネクションの効率化
-	storageClient, err = storage.NewClient(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer storageClient.Close()
-
-	Trace.Printf("Debug: %v", r.URL.Path)
 	boxID := strings.TrimPrefix(r.URL.Path, "/boxes/")
 
 	var boxInfo boxInfo
-	err = dbPool.Get(&boxInfo, "SELECT hashed_pass FROM boxes WHERE id = ? AND deleted_at IS NULL", boxID)
+	err := dbPool.Get(&boxInfo, "SELECT hashed_pass FROM boxes WHERE id = ? AND deleted_at IS NULL", boxID)
 	if err == sql.ErrNoRows {
 		http.Error(w, "Box Not Found", http.StatusNotFound)
 		Info.Printf("box not found: %v", boxID)
@@ -148,7 +135,7 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		expirationDate = time.Now().Add(time.Minute * time.Duration(req.Duration))
 	}
-	if _, err := dbPool.Exec("INSERT INTO items(`id`, `box_id`, `name`, `size`, `expires_at`) VALUES (?, ?, ?, ?)", itemID.String(), boxID, req.Name, fileInfo.Size, expirationDate); err != nil {
+	if _, err := dbPool.Exec("INSERT INTO items(`id`, `box_id`, `name`, `size`, `expires_at`) VALUES (?, ?, ?, ?, ?)", itemID.String(), boxID, req.Name, fileInfo.Size, expirationDate); err != nil {
 		http.Error(w, "DB Error", http.StatusInternalServerError)
 		Error.Printf("error occured when INSERT item record: %v", err)
 	}
