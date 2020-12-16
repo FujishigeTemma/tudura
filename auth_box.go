@@ -88,5 +88,12 @@ func AuthBoxHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	session.Values[boxID] = uuid.New().String()
+	session.Options.HttpOnly = true
+	session.Options.Secure = true
+	if err := session.Save(r, w); err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		Error.Printf("Save: %v", err)
+		return
+	}
 	w.WriteHeader(http.StatusNoContent)
 }
