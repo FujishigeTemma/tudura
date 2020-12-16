@@ -19,11 +19,8 @@ type boxWithItems struct {
 // GetBoxHandler POST /boxes/{boxId} ボックスの概要を取得
 func GetBoxHandler(w http.ResponseWriter, r *http.Request) {
 	clientOnce.Do(func() {
-		var err error
-		dbPool, err = getDBPool()
-		if err != nil {
-			http.Error(w, "Error initializing database", http.StatusInternalServerError)
-			Error.Printf("getDBPool(): %s", err)
+		if err := setup(); err != nil {
+			http.Error(w, "Error initializing context", http.StatusInternalServerError)
 			return
 		}
 	})

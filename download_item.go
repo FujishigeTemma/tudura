@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"cloud.google.com/go/storage"
@@ -21,11 +21,8 @@ type itemInfo struct {
 // DownloadItemHandler POST /boxes/{boxId}/d/{itemId} アイテムのダウンロード
 func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 	clientOnce.Do(func() {
-		var err error
-		dbPool, err = getDBPool()
-		if err != nil {
-			http.Error(w, "Error initializing database", http.StatusInternalServerError)
-			Error.Printf("getDBPool(): %v", err)
+		if err := setup(); err != nil {
+			http.Error(w, "Error initializing context", http.StatusInternalServerError)
 			return
 		}
 	})
@@ -47,19 +44,10 @@ func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 	//
 	//}
 
-	var err error
-	// TODO: コネクションの効率化
-	storageClient, err = storage.NewClient(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer storageClient.Close()
-
-	Trace.Printf("Debug: %v", r.URL.Path)
 	itemID := r.URL.Path[46:]
 
 	var itemInfo itemInfo
-	err = dbPool.Get(&itemInfo, "SELECT name, CASE WHEN expires_at <= ? THEN 1 ELSE 0 END AS is_expired FROM items WHERE id = ?", time.Now(), itemID)
+	err := dbPool.Get(&itemInfo, "SELECT name, CASE WHEN expires_at <= ? THEN 1 ELSE 0 END AS is_expired FROM items WHERE id = ?", time.Now(), itemID)
 	if err == sql.ErrNoRows {
 		http.Error(w, "Item Not Found", http.StatusNotFound)
 		Info.Printf("item not found: %v", itemID)
@@ -84,7 +72,7 @@ func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename= %s", itemInfo.Name))
-	w.Header().Set("Content-Length", string(file.Attrs.Size))
+	w.Header().Set("Content-Length", strconv.FormatInt(file.Attrs.Size, 10))
 	if _, err := io.Copy(w, file); err != nil {
 		http.Error(w, "I/O Error", http.StatusInternalServerError)
 		Error.Printf("io.Copy(): %v", err)

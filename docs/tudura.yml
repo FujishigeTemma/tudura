@@ -17,7 +17,7 @@ paths:
         - box
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/200OK"
           content:
             application/json:
               schema:
@@ -27,21 +27,27 @@ paths:
       summary: ボックスの概要を取得
       description: |-
         ボックスの概要を取得します。
+      security:
+        - cookieAuth: [ ]
       tags:
         - box
       parameters:
         - $ref: '#/components/parameters/boxIdInPath'
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/200OK"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Box"
+        "401":
+          $ref: "#/components/responses/401Unauthorized"
     post:
       summary: アイテムをアップロード
       description: |-
         アイテムをアップロードします。
+      security:
+        - cookieAuth: [ ]
       tags:
         - box
         - item
@@ -55,16 +61,40 @@ paths:
               $ref: "#/components/schemas/PostItemRequest"
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/200OK"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Item"
+        "401":
+          $ref: "#/components/responses/401Unauthorized"
+  '/boxes/{boxId}/auth':
+    post:
+      summary: ボックスへの認証を行います。
+      description: |-
+        ボックスへのパスワード認証を行い、Cookieを付与します。
+      tags:
+        - box
+        - auth
+      parameters:
+        - $ref: '#/components/parameters/boxIdInPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostAuthRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/200OK"
+        "401":
+          $ref: "#/components/responses/401Unauthorized"
   '/boxes/{boxId}/{itemId}':
     get:
       summary: アイテムの詳細を取得
       description: |-
         アイテムの詳細を取得します。
+      security:
+        - cookieAuth: [ ]
       tags:
         - box
         - item
@@ -73,12 +103,13 @@ paths:
         - $ref: '#/components/parameters/itemIdInPath'
       responses:
         "200":
-          description: OK
+          $ref: "#/components/responses/200OK"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Item"
-
+        "401":
+          $ref: "#/components/responses/401Unauthorized"
 
 components:
   schemas:
@@ -132,6 +163,11 @@ components:
           type: string
           nullable: true
           description: 大文字・小文字・記号が使用可能。8文字以上(18文字以上を推奨)
+    PostAuthRequest:
+      type: object
+      properties:
+        password:
+          type: string
   parameters:
     boxIdInPath:
       in: path
@@ -186,11 +222,23 @@ components:
         default: posted_at
       description: ソートに使用する属性
   responses:
+    200OK:
+      description: OK
+    204NoContent:
+      description: No Content
+    401Unauthorized:
+      description: Unauthorized 認証されていません。
     404NotFound:
-      description: The specified resource was not found.
-
+      description: Not Found リソースが見つかりません。
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: tudura_box_session
 tags:
   - name: box
     description: ボックスAPI
   - name: item
     description: アイテムAPI
+  - name: auth
+    description: 認証API
