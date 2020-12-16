@@ -52,6 +52,18 @@ func GetBoxHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if boxInfo.PasswordRequired {
+		err := checkAuth(boxID, r)
+		if err == UnauthorizedError {
+			http.Error(w, "Authentication failed", http.StatusUnauthorized)
+			return
+		}
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	}
+
 	if err := dbPool.Select(&boxInfo.Items, "SELECT id, name, size, expires_at FROM items WHERE box_id = ? AND expires_at > ?", boxID, time.Now()); err != nil {
 		http.Error(w, "DB Error", http.StatusInternalServerError)
 		Error.Printf("error occured when SELECT item records: %s", err)

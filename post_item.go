@@ -66,10 +66,17 @@ func PostItemHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Boxのauth時にcookieを付与→cookieがない場合はBoxのauthにリダイレクト
-	//if boxInfo.HashedPass.Valid() {
-	//
-	//}
+	if boxInfo.HashedPass.Valid {
+		err := checkAuth(boxID, r)
+		if err == UnauthorizedError {
+			http.Error(w, "Authentication failed", http.StatusUnauthorized)
+			return
+		}
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	}
 
 	itemID, err := uuid.NewRandom()
 	if err != nil {

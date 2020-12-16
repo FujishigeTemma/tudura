@@ -39,15 +39,37 @@ func DownloadItemHandler(w http.ResponseWriter, r *http.Request) {
 	// Set CORS headers for the main request.
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	// TODO: Boxのauth時にcookieを付与→cookieがない場合はBoxのauthにリダイレクト
-	//if len(boxInfo.HashedPass) != 0 {
-	//
-	//}
+	boxID := r.URL.Path[7:42]
+
+	var boxInfo boxInfo
+	err := dbPool.Get(&boxInfo, "SELECT hashed_pass FROM boxes WHERE id = ?", boxID)
+	if err == sql.ErrNoRows {
+		http.Error(w, "Box Not Found", http.StatusNotFound)
+		Info.Printf("box not found: %v", boxID)
+		return
+	}
+	if err != nil {
+		http.Error(w, "DB Error", http.StatusInternalServerError)
+		Error.Printf("error occured when SELECT the box record: %s", err)
+		return
+	}
+
+	if boxInfo.HashedPass.Valid {
+		err := checkAuth(boxID, r)
+		if err == UnauthorizedError {
+			http.Error(w, "Authentication failed", http.StatusUnauthorized)
+			return
+		}
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	}
 
 	itemID := r.URL.Path[46:]
 
 	var itemInfo itemInfo
-	err := dbPool.Get(&itemInfo, "SELECT name, CASE WHEN expires_at <= ? THEN 1 ELSE 0 END AS is_expired FROM items WHERE id = ?", time.Now(), itemID)
+	err = dbPool.Get(&itemInfo, "SELECT name, CASE WHEN expires_at <= ? THEN 1 ELSE 0 END AS is_expired FROM items WHERE id = ?", time.Now(), itemID)
 	if err == sql.ErrNoRows {
 		http.Error(w, "Item Not Found", http.StatusNotFound)
 		Info.Printf("item not found: %v", itemID)

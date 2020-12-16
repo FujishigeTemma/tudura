@@ -35,10 +35,37 @@ func GetItemHandler(w http.ResponseWriter, r *http.Request) {
 	// Set CORS headers for the main request.
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
+	boxID := r.URL.Path[7:42]
+
+	var boxInfo boxWithItems
+	err := dbPool.Get(&boxInfo, "SELECT id, name, CASE WHEN hashed_pass IS NOT NULL THEN 1 ELSE 0 END AS password_required, updated_at FROM boxes WHERE id = ?", boxID)
+	if err == sql.ErrNoRows {
+		http.Error(w, "Box Not Found", http.StatusNotFound)
+		Info.Printf("box not found: %v", boxID)
+		return
+	}
+	if err != nil {
+		http.Error(w, "DB Error", http.StatusInternalServerError)
+		Error.Printf("error occured when SELECT the box record: %s", err)
+		return
+	}
+
+	if boxInfo.PasswordRequired {
+		err := checkAuth(boxID, r)
+		if err == UnauthorizedError {
+			http.Error(w, "Authentication failed", http.StatusUnauthorized)
+			return
+		}
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	}
+
 	itemID := r.URL.Path[44:]
 
 	var itemInfo item
-	err := dbPool.Get(&itemInfo, "SELECT id, name, size, expires_at FROM items WHERE id = ?", itemID)
+	err = dbPool.Get(&itemInfo, "SELECT id, name, size, expires_at FROM items WHERE id = ?", itemID)
 	if err == sql.ErrNoRows {
 		http.Error(w, "Item Not Found", http.StatusNotFound)
 		Info.Printf("item not found: %v", itemID)

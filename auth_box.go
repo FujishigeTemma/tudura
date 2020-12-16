@@ -3,11 +3,16 @@ package function
 import (
 	"database/sql"
 	"encoding/json"
-	"github.com/google/uuid"
+	"errors"
 	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+)
+
+var (
+	UnauthorizedError = errors.New("401 StatusUnauthorized")
 )
 
 type postAuthRequest struct {
@@ -96,4 +101,16 @@ func AuthBoxHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func checkAuth(boxID string, r *http.Request) error {
+	session, err := session.Get(r, tuduraSessionName)
+	if err != nil {
+		Error.Printf("session.Get: %v", err)
+		return err
+	}
+	if _, ok := session.Values[boxID]; session.IsNew || !ok {
+		return UnauthorizedError
+	}
+	return nil
 }
