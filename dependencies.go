@@ -19,7 +19,7 @@ var (
 	clientOnce    sync.Once
 	dbPool        *sqlx.DB
 	storageClient *storage.Client
-	sessionStore  *fg.Store
+	session       *fg.Store
 
 	Trace   *log.Logger
 	Info    *log.Logger
@@ -30,6 +30,7 @@ var (
 var ctx = context.Background()
 var bucketName = getEnv("BUCKET", "tudura")
 var projectID = getEnv("PROJECT_ID", "tudura")
+var tuduraSessionName = getEnv("TUDURA_SESSION_NAME", "t_session")
 
 func init() {
 	Trace = log.New(os.Stdout, "TRACE: ", log.Ldate|log.Ltime|log.Lshortfile)
@@ -55,7 +56,7 @@ func setup() error {
 		Error.Printf("firestore.NewClient: %v", err)
 		return err
 	}
-	sessionStore, err = fg.New(ctx, client)
+	session, err = fg.New(ctx, client)
 	if err != nil {
 		Error.Printf("fg.NewClient: %v", err)
 		return err

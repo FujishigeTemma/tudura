@@ -21,10 +21,6 @@ type postItemRequest struct {
 	Duration int    `json:"duration" db:"duration"`
 }
 
-type boxInfo struct {
-	HashedPass sql.NullString `json:"hashedPass" db:"hashed_pass"`
-}
-
 type uploadedFile struct {
 	ID        string    `json:"id" db:"id"`
 	BoxID     string    `json:"boxId" db:"box_id"`
